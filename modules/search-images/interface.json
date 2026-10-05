@@ -1,0 +1,47 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "image_url",
+    "label": "Image Url",
+    "type": "text"
+  },
+  {
+    "name": "thumbnail_url",
+    "label": "Thumbnail Url",
+    "type": "text"
+  },
+  {
+    "name": "link",
+    "label": "Link",
+    "type": "text"
+  },
+  {
+    "name": "source",
+    "label": "Source",
+    "type": "text"
+  },
+  {
+    "name": "domain",
+    "label": "Domain",
+    "type": "text"
+  },
+  {
+    "name": "image_width",
+    "label": "Image Width",
+    "type": "number"
+  },
+  {
+    "name": "image_height",
+    "label": "Image Height",
+    "type": "number"
+  }
+]

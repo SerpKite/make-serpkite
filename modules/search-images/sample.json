@@ -1,0 +1,11 @@
+{
+  "position": 1,
+  "title": "Example",
+  "image_url": "https://example.com",
+  "thumbnail_url": "https://example.com",
+  "link": "https://example.com",
+  "source": "Example",
+  "domain": "Example",
+  "image_width": 1,
+  "image_height": 1
+}

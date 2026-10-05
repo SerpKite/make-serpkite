@@ -1,0 +1,5733 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SerpKite SERP API",
+    "version": "1.5.2",
+    "description": "Public search API (api.serpkite.com). Google results as clean JSON or Markdown\nfor AI agents, plus a Google Custom Search–compatible endpoint. Official SDKs:\n`serpkite` on npm and PyPI, `github.com/serpkite/serpkite-go`.\n\n**Auth:** `Authorization: Bearer skt_live_…`. GET requests may pass `?api_key=`\ninstead. `/customsearch/v1` also accepts Google's `?key=`.\n\n**Bodies:** every vertical accepts `POST` with a JSON object or `GET` with the\nsame parameters in the query string (only `GET /v1/search` is spelled out\nhere). Unknown parameters are rejected with 400, and so is a parameter the\nendpoint would ignore (e.g. `time` on `/v1/scholar`, `ll` on `/v1/search`). To run many queries at once,\nuse `POST /v1/batches`.\n\n**Formats:** `format=json` (default) returns the schemas below.\n`format=markdown` returns `text/markdown` for every vertical.\n`format=compact` and `fields=` return a reduced JSON object (same top-level\nkeys, fewer item fields, `meta` always kept), so required item fields may be\nabsent there.\n\n**Responses** share one envelope: `request` (the normalised request),\n`results` (the vertical's primary list), vertical-specific extras and `meta`.\nAll keys are snake_case.\n\n**Credits** are decimal numbers (e.g. `0.5`). Failed, empty and blocked\nresponses are refunded. Every billed response carries `X-Credits-Used`,\n`X-Credits-Remaining`, `X-Cost-USD`, `X-Cache` (`HIT`|`MISS`), `X-Latency-Ms`,\n`X-Tokens-Estimate` and `X-Request-Id`.\n\n**Errors** share one body: `{\"error\":{\"code\",\"message\",\"request_id\"}}`.\nUpstream failures (`upstream_error`, `upstream_blocked`, `upstream_timeout`)\nare `503` with `Retry-After`, never billed and safe to retry. The API never\nreturns `502` or `504`.\n\n**CORS:** `Access-Control-Allow-Origin: *` without credentials; the `X-*`\nheaders above are exposed, so a browser playground can call the API with a key.\nThe keyless `/playground/search` is the exception: it only answers serpkite.com\nand app.serpkite.com (other `Origin`s get 403).\n\nCredit table: search/news/images/videos/maps/places/shopping/scholar/patents/\nwebpage/customsearch = 1 per page; `num=100` depth bundle = 7; reviews = 1 per 10;\nautocomplete = 0.5; `include_content` = +1 per fetched page;\nbatches ×0.5; cache hit via `max_age` ×0.5. `engine=consensus` (search only) =\nthe sum of one page per provider that returned results.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.serpkite.com"
+    },
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "security": [
+    {
+      "bearer": []
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Readiness (DB, Valkey)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "A dependency is down"
+          }
+        }
+      }
+    },
+    "/livez": {
+      "get": {
+        "summary": "Liveness only",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/search": {
+      "post": {
+        "summary": "Google web search (organic results, knowledge graph, answer box, people also ask, top stories, local pack…)",
+        "operationId": "search",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      },
+      "get": {
+        "summary": "Same as POST /v1/search with query-string parameters",
+        "operationId": "searchGet",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "num",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uule",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ll",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tbs",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "safe",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "autocorrect",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_content",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ads",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "max_age",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "engine",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "google (default), auto, consensus, one provider, or a comma-separated list (e.g. google,brave)"
+          },
+          {
+            "name": "include_domains",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated domains, or the key repeated (see SearchRequest.include_domains)"
+          },
+          {
+            "name": "exclude_domains",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated domains, or the key repeated"
+          },
+          {
+            "name": "boost_domains",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated domains, or the key repeated"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "highlights",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Needs include_content"
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/images": {
+      "post": {
+        "summary": "Google Images",
+        "operationId": "images",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ImagesOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/videos": {
+      "post": {
+        "summary": "Google Videos",
+        "operationId": "videos",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/VideosOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/news": {
+      "post": {
+        "summary": "Google News",
+        "operationId": "news",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NewsOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/maps": {
+      "post": {
+        "summary": "Google Maps search (places with coordinates). Accepts `ll` (\"@lat,lng,zoomz\") to search around a point",
+        "operationId": "maps",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PlacesOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/places": {
+      "post": {
+        "summary": "Google local results (places)",
+        "operationId": "places",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PlacesOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/reviews": {
+      "post": {
+        "summary": "Reviews of a place (by `place_id`, `cid` or `fid`); 1 credit per 10 reviews",
+        "operationId": "reviews",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ReviewsOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/shopping": {
+      "post": {
+        "summary": "Google Shopping",
+        "operationId": "shopping",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ShoppingOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/scholar": {
+      "post": {
+        "summary": "Google Scholar",
+        "operationId": "scholar",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ScholarOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/patents": {
+      "post": {
+        "summary": "Google Patents",
+        "operationId": "patents",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PatentsOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/autocomplete": {
+      "post": {
+        "summary": "Google autocomplete suggestions (0.5 credit)",
+        "operationId": "autocomplete",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Search"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AutocompleteOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/webpage": {
+      "post": {
+        "summary": "Fetch any public URL (HTML or PDF) and return clean Markdown + metadata (1 credit)",
+        "operationId": "webpage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebpageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/WebpageOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/extract": {
+      "post": {
+        "summary": "Up to 20 URLs (HTML or PDF) as Markdown, text or HTML, with query-ranked highlights, links and images (1 credit per URL read)",
+        "operationId": "extract",
+        "description": "Every URL is billed only when it comes back: 1 credit, 0.5 from cache. URLs that\nfail are listed in `failed` and cost nothing. The response is `200` even when every\nURL failed. Highlights are ranked with BM25 (lexical, no model).\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              },
+              "example": {
+                "urls": [
+                  "https://example.com/pricing",
+                  "https://example.com/docs/limits.pdf"
+                ],
+                "query": "enterprise price",
+                "highlights": 2
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ExtractOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/map": {
+      "post": {
+        "summary": "The URLs of a site, from robots.txt sitemaps and the start page's links, optionally ranked by a search (1 credit; free when nothing is found)",
+        "operationId": "map",
+        "description": "Reads the sitemaps listed in robots.txt (or `/sitemap.xml`), following sitemap\nindexes; XML, gzip, RSS/Atom and plain-text sitemaps are understood. URLs are\ncleaned (fragment and tracking parameters such as `utm_*`, `gclid` and `fbclid`\ndropped), kept on the site, filtered by `include_paths` / `exclude_paths` and\nde-duplicated (`www.`, scheme and trailing slash folded). `search` ranks the URLs\nby their path words and titles (BM25) and drops the ones that don't match. Takes\nat most about 30 seconds.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MapRequest"
+              },
+              "example": {
+                "url": "https://docs.example.com/",
+                "search": "install guide",
+                "limit": 50
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MapOK"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/crawl": {
+      "post": {
+        "summary": "Start an async crawl of one site (1 credit per page read; `limit` credits reserved up front, the rest refunded)",
+        "operationId": "createCrawl",
+        "description": "From `url` and (unless `sitemap: skip`) the site's sitemaps, same host (optionally\nsubdomains), up to `limit` pages and `max_depth` link hops, filtered by\n`include_paths` / `exclude_paths` (regular expressions matched against the URL\npath). Breadth first, or best first with `query` (pages whose URL and link text\nmatch it are read first). Each host's robots.txt is honoured (RFC 9309: rules,\n`Crawl-delay`; a robots.txt that answers 5xx stops the crawl at the start page).\nURLs are canonicalised (fragments and tracking parameters dropped, `www.`,\ntrailing slashes and redirects folded) so each page is read once. Each page comes\nback as Markdown (or text) with its metadata. A crawl runs for at most 30 minutes\nand returns up to 16 MB of pages; `result.stats.stopped` says why it ended.\n\nReturns `202` with a task; poll `GET /v1/crawl/{id}` or wait for the signed\n`crawl.completed` webhook. Pages read cost 1 credit each (0.5 from cache); a crawl\nthat read nothing fails (`no_pages`) and is refunded. At most 20 crawls per account\nmay be queued or running at once (`429`); a crawl interrupted by a deploy restarts\nfrom the beginning.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrawlRequest"
+              },
+              "example": {
+                "url": "https://docs.example.com/",
+                "limit": 50,
+                "max_depth": 2,
+                "include_paths": [
+                  "^/guides/"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "$ref": "#/components/responses/TaskAccepted"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/crawl/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Poll a crawl (kept for 24 hours)",
+        "operationId": "getCrawl",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrawlTask"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel a crawl. A queued crawl is canceled and refunded at once; a running one stops at its next checkpoint and is charged for the pages read",
+        "description": "`404` when there is no such crawl, `409` when it already finished.",
+        "operationId": "cancelCrawl",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TaskCanceled"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/monitors": {
+      "post": {
+        "summary": "Create a monitor — a saved /v1/search or /v1/news request (new results) or a /v1/webpage URL (content changes) that runs on a schedule and reports what is new (signed webhook and run history)",
+        "operationId": "createMonitor",
+        "description": "Runs hourly to monthly (`interval` or `interval_seconds`, default daily); the\nfirst run is due right away (unless `active: false`). With `endpoint: webpage`\nthe monitor watches `url` and reports the page (Markdown, `change: new|changed`)\nwhenever its content changes (1 credit per check). Each run is billed like the\nsearch it makes (1 credit per 10 results, `num: 100` is 7; empty and failed runs\nare free) on the monitor's key: the key that created it, or last changed or ran\nit, under that key's limits and the account's spend cap. Only the fields below\nare kept; any other search field is a `400`. Results among the\ntop `num` not seen in earlier runs are POSTed as a `monitor.results` webhook when\nthe monitor has a `webhook_url`, and are always listed in its run history\n(`GET /v1/monitors/{id}/runs`, results kept 24 hours). At most 100 monitors per\naccount (403 `forbidden`). A monitor pauses itself after 10 failed runs in a row\n(search errors, insufficient credits or webhook failures) or when its key is\nrevoked; set `active: true` to resume.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorCreateRequest"
+              },
+              "example": {
+                "q": "ai agents",
+                "endpoint": "news",
+                "interval": "hourly",
+                "name": "agents news",
+                "webhook_url": "https://example.com/hooks/serpkite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitor"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "List the account's monitors",
+        "operationId": "listMonitors",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/monitors/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get a monitor",
+        "operationId": "getMonitor",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitor"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a monitor: name, interval, webhook_url (empty string removes it), active, and the saved search (endpoint, q and search options; a changed search starts a new baseline)",
+        "operationId": "updateMonitor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorUpdateRequest"
+              },
+              "example": {
+                "active": false,
+                "interval": "daily"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitor"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a monitor",
+        "operationId": "deleteMonitor",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/monitors/{id}/runs": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        },
+        {
+          "name": "before",
+          "in": "query",
+          "description": "`next_before` of the previous page",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "A monitor's run history, newest first (runs are kept 30 days, their results 24 hours)",
+        "operationId": "listMonitorRuns",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorRunList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/monitors/{id}/run": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Run a monitor now (it becomes due at the next scheduler poll, within about 30 seconds)",
+        "description": "The monitor must be active. A paused monitor returns 409; resume it with\nPATCH {\"active\": true} first (resuming also makes it due immediately).\nThe monitor is bound to the calling key, which this and later runs are billed to.\n",
+        "operationId": "runMonitor",
+        "responses": {
+          "202": {
+            "description": "Scheduled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitor"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/customsearch/v1": {
+      "get": {
+        "summary": "Google Custom Search JSON API–compatible endpoint (for apps moving off CSE)",
+        "operationId": "customSearch",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key (or Authorization Bearer)"
+          },
+          {
+            "name": "cx",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Accepted and ignored"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 91,
+              "default": 1
+            }
+          },
+          {
+            "name": "num",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 10
+            }
+          },
+          {
+            "name": "gl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lr",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "safe",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "off"
+              ]
+            }
+          },
+          {
+            "name": "dateRestrict",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "d7",
+                "w2",
+                "m6",
+                "y1"
+              ]
+            }
+          },
+          {
+            "name": "siteSearch",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSE-shaped response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CSEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/rank": {
+      "post": {
+        "summary": "Position of a domain for a keyword in the top N (default 100; priced like /v1/search depth, 7 credits for 100)",
+        "operationId": "rank",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/status": {
+      "get": {
+        "summary": "Public live status — requests, success rate, p50/p95 latency per endpoint over the last hour",
+        "operationId": "status",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/batches": {
+      "post": {
+        "summary": "Queue up to 100 requests for one endpoint at half price. Each request becomes one batch job",
+        "operationId": "createBatches",
+        "description": "Credits for the whole batch are reserved together: if the balance, spend cap, key limit or\nfree daily cap can't cover every valid request, none is queued and each gets the error\n(invalid requests get their own 400 entry either way). Each job is settled and refunded on\nits own once it runs.\n\n**Retries.** Send an `Idempotency-Key` to make the call safe to retry: for 24 hours a\nrepeat with the same key and the same body returns the first response (with\n`Idempotent-Replayed: true`) without queueing or billing again. The same key with a\ndifferent body is rejected with 422 `idempotency_key_reused`; a repeat while the first\ncall is still running gets 409.\n\n**Webhooks.** Every delivery is a `POST` with `X-SerpKite-Event: batch.completed`,\n`X-SerpKite-Delivery` (the job id), `X-SerpKite-Timestamp` (Unix seconds) and\n`X-SerpKite-Signature: v1=<hex HMAC-SHA256(secret, \"<timestamp>.<raw body>\")>`. Deliveries\nare always signed; the account's secret is created with its first webhook and revealed by\nrotating it (dashboard Settings → Webhooks). Verify by recomputing the HMAC over the raw\nbody, comparing in constant time, and rejecting timestamps older than 5 minutes. The SDKs\nship `verifyWebhook` / `verify_webhook` / `VerifyWebhook`.\n",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "1-255 printable ASCII characters (e.g. a UUID). Retries with the same key and body replay the first response for 24 h",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Queued. One entry per request, in order; an entry is a batch job or an error object",
+            "headers": {
+              "Idempotent-Replayed": {
+                "description": "`true` when this is the stored response of an earlier call with the same Idempotency-Key",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "true"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/v1/batches/{id}": {
+      "get": {
+        "summary": "Poll a batch job",
+        "operationId": "getBatch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Batch"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/account": {
+      "get": {
+        "summary": "Balance, limits and this month's usage for the calling key's account",
+        "operationId": "account",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/playground/search": {
+      "post": {
+        "summary": "No-login demo of /v1/search (and news, images, autocomplete via `endpoint`). Per-IP rate limited (IPv6 per /64), not billed. Browser calls only from serpkite.com and app.serpkite.com",
+        "operationId": "playground",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SearchRequest"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "endpoint": {
+                        "type": "string",
+                        "enum": [
+                          "search",
+                          "news",
+                          "images",
+                          "autocomplete"
+                        ],
+                        "default": "search"
+                      },
+                      "turnstile_token": {
+                        "type": "string",
+                        "description": "Cloudflare Turnstile token, required when the server enforces Turnstile. Single-use: get a fresh one for every request"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Same body as the corresponding endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "description": "Bot check failed (missing, spent or foreign Turnstile token) or the Origin is not one of our sites",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/mcp": {
+      "post": {
+        "summary": "Remote MCP server (streamable HTTP, JSON-RPC 2.0). Tools search, news, maps, scholar, webpage",
+        "operationId": "mcp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Notification accepted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "crawl.completed": {
+      "post": {
+        "operationId": "crawlCompletedWebhook",
+        "summary": "A crawl finished (completed, failed or canceled)",
+        "description": "Sent to the crawl's `webhook_url` (or the account webhook). Signed like batch\nwebhooks: `X-SerpKite-Event: crawl.completed`, `X-SerpKite-Delivery` (the task id),\n`X-SerpKite-Timestamp` and `X-SerpKite-Signature: v1=<hex HMAC-SHA256(secret,\n\"<timestamp>.<raw body>\")>`. Retried with backoff until a 2xx.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCompletedEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Any 2xx acknowledges the delivery"
+          }
+        }
+      }
+    },
+    "monitor.results": {
+      "post": {
+        "operationId": "monitorResultsWebhook",
+        "summary": "A monitor run found results it had not seen before",
+        "description": "Sent to the monitor's `webhook_url` (when it has one) only when a run finds new results (the first\nrun sends everything it found, with `first_run: true`). Same signature headers as\nthe other webhooks, with `X-SerpKite-Event: monitor.results` and\n`X-SerpKite-Delivery: <run id>`. Tried up to 3 times per run; results that could\nnot be delivered stay new for the next run (and are in the run history either way).\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorResultsEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Any 2xx acknowledges the delivery"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "requestBodies": {
+      "Search": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchRequest"
+            }
+          }
+        }
+      }
+    },
+    "headers": {
+      "CreditsUsed": {
+        "schema": {
+          "type": "number"
+        }
+      },
+      "CreditsRemaining": {
+        "schema": {
+          "type": "number"
+        }
+      },
+      "CostUSD": {
+        "schema": {
+          "type": "number"
+        }
+      },
+      "Cache": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HIT",
+            "MISS"
+          ]
+        }
+      },
+      "LatencyMs": {
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "TokensEstimate": {
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "RetryAfter": {
+        "description": "Seconds to wait before retrying",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "Error": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "description": "Temporarily unavailable, not billed, safe to retry after `Retry-After`.\nCodes: `upstream_error` (the upstream page couldn't be fetched or parsed),\n`upstream_blocked` (the upstream is rate limiting us), `upstream_timeout`\n(the search took too long), `unavailable` (endpoint or dependency down).\nThe API never sends 502 or 504.\n",
+        "headers": {
+          "Retry-After": {
+            "$ref": "#/components/headers/RetryAfter"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "TaskAccepted": {
+        "description": "Queued. Poll `poll_url` or wait for the webhook",
+        "headers": {
+          "X-Credits-Reserved": {
+            "description": "The maximum price, reserved until the task ends",
+            "schema": {
+              "type": "number"
+            }
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "Location": {
+            "description": "Path of the task (`/v1/{kind}/{id}`)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskCreated"
+            },
+            "example": {
+              "id": "01926a3e-7b2c-7c4e-9f1a-2b3c4d5e6f70",
+              "kind": "crawl",
+              "status": "queued",
+              "created_at": "2026-10-03T12:00:00Z",
+              "poll_url": "https://api.serpkite.com/v1/crawl/01926a3e-7b2c-7c4e-9f1a-2b3c4d5e6f70",
+              "credits_reserved": 50,
+              "webhook_url": null
+            }
+          }
+        }
+      },
+      "TaskCanceled": {
+        "description": "`canceled` (it was queued: refunded at once) or `canceling` (it is running and stops at its next checkpoint)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskCancelResponse"
+            }
+          }
+        }
+      },
+      "SearchOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ImagesOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ImagesResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "VideosOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VideosResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NewsOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NewsResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PlacesOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PlacesResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ReviewsOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReviewsResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShoppingOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ShoppingResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ScholarOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ScholarResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PatentsOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PatentsResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AutocompleteOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AutocompleteResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ExtractOK": {
+        "description": "OK",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ExtractResponse"
+            },
+            "example": {
+              "request": {
+                "endpoint": "extract",
+                "urls": [
+                  "https://example.com/pricing",
+                  "https://example.com/missing"
+                ],
+                "format": "markdown",
+                "query": "enterprise price"
+              },
+              "results": [
+                {
+                  "url": "https://example.com/pricing",
+                  "status_code": 200,
+                  "title": "Pricing",
+                  "metadata": {
+                    "title": "Pricing",
+                    "content_type": "text/html"
+                  },
+                  "cached": false,
+                  "markdown": "# Pricing\n\n…",
+                  "highlights": [
+                    {
+                      "text": "Enterprise: $499 per month …",
+                      "score": 4.83,
+                      "heading": "Plans"
+                    }
+                  ]
+                }
+              ],
+              "failed": [
+                {
+                  "url": "https://example.com/missing",
+                  "error": {
+                    "code": "upstream_error",
+                    "message": "could not fetch the page: the site answered 404; you were not charged"
+                  }
+                }
+              ],
+              "meta": {
+                "request_id": "req_01J9",
+                "credits_used": 1,
+                "latency_ms": 2210,
+                "succeeded": 1,
+                "failed": 1
+              }
+            }
+          }
+        }
+      },
+      "MapOK": {
+        "description": "OK",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MapResponse"
+            },
+            "example": {
+              "request": {
+                "endpoint": "map",
+                "url": "https://docs.example.com/",
+                "limit": 50,
+                "sitemap": "include",
+                "include_subdomains": false,
+                "search": "install guide"
+              },
+              "results": [
+                {
+                  "url": "https://docs.example.com/install",
+                  "lastmod": "2026-09-01",
+                  "source": "sitemap"
+                },
+                {
+                  "url": "https://docs.example.com/guide",
+                  "title": "Guide",
+                  "source": "page"
+                }
+              ],
+              "meta": {
+                "request_id": "req_01J9",
+                "credits_used": 1,
+                "latency_ms": 840,
+                "count": 2
+              }
+            }
+          }
+        }
+      },
+      "WebpageOK": {
+        "description": "OK (text/markdown when format=markdown)",
+        "headers": {
+          "X-Credits-Used": {
+            "$ref": "#/components/headers/CreditsUsed"
+          },
+          "X-Credits-Remaining": {
+            "$ref": "#/components/headers/CreditsRemaining"
+          },
+          "X-Cost-USD": {
+            "$ref": "#/components/headers/CostUSD"
+          },
+          "X-Cache": {
+            "$ref": "#/components/headers/Cache"
+          },
+          "X-Latency-Ms": {
+            "$ref": "#/components/headers/LatencyMs"
+          },
+          "X-Tokens-Estimate": {
+            "$ref": "#/components/headers/TokensEstimate"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/WebpageResponse"
+            }
+          },
+          "text/markdown": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "403: spend_cap_reached, key_limit_reached, forbidden. 409/422: idempotency_key_reused. 429: rate_limited, daily_limit_reached. 503: upstream_error, upstream_blocked, upstream_timeout, unavailable (the API never sends 502 or 504)",
+                "examples": [
+                  "unauthorized",
+                  "invalid_request",
+                  "insufficient_credits",
+                  "rate_limited",
+                  "daily_limit_reached",
+                  "spend_cap_reached",
+                  "key_limit_reached",
+                  "idempotency_key_reused",
+                  "forbidden",
+                  "not_found",
+                  "upstream_error",
+                  "upstream_blocked",
+                  "upstream_timeout",
+                  "unavailable",
+                  "internal"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "SearchRequest": {
+        "type": "object",
+        "required": [
+          "q"
+        ],
+        "properties": {
+          "q": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "country": {
+            "type": "string",
+            "default": "us",
+            "description": "Country code (ISO 3166-1 alpha-2, case-insensitive; uk is accepted as gb). When omitted and location ends in a country name, that country is used. Russia (ru) is supported across all search verticals, including patents, using the shared proxy routes"
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "description": "Interface language: a language code with an optional region (e.g. en, ru, de, pt-br, zh-tw, es-419). Russian (ru) is supported across all search verticals; language does not change the selected country. On patents, a non-English code restricts publication language (ar, zh, da, nl, fi, fr, de, it, ja, ko, no, pt, ru, es, sv)"
+          },
+          "location": {
+            "type": "string",
+            "description": "Free-text location, e.g. \"Austin, Texas, United States\""
+          },
+          "uule": {
+            "type": "string",
+            "description": "Pre-encoded Google location (overrides ll and location; percent-encoded values are decoded)"
+          },
+          "ll": {
+            "type": "string",
+            "description": "Map point \"@lat,lng,14z\" (maps and places only; zoom optional): the search runs as a searcher at that point. Overrides location"
+          },
+          "num": {
+            "type": "integer",
+            "default": 10,
+            "description": "10, or up to 100 for the depth bundle on search and news (7 credits for 100; values between round up to whole pages). Other verticals return one page of 10"
+          },
+          "page": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 10
+          },
+          "time": {
+            "type": "string",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "description": "Only results from the last hour/day/… (search, news, images, videos, shopping). A fallback engine without that window is skipped, never answered unfiltered"
+          },
+          "tbs": {
+            "type": "string",
+            "description": "Advanced: raw Google tbs filter (e.g. qdr:d, qdr:w2, cdr:1,cd_min:1/1/2026,cd_max:1/31/2026); overrides time"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "desktop",
+              "mobile"
+            ],
+            "default": "desktop"
+          },
+          "safe": {
+            "type": "string",
+            "enum": [
+              "active",
+              "off"
+            ],
+            "default": "off"
+          },
+          "autocorrect": {
+            "type": "boolean",
+            "default": true
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "markdown",
+              "compact"
+            ],
+            "default": "json"
+          },
+          "fields": {
+            "type": "string",
+            "description": "Comma-separated projection, e.g. \"results.title,results.link,knowledge_graph\""
+          },
+          "include_content": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "default": 0,
+            "description": "Also fetch the top N organic pages as Markdown (+1 credit each fetched page)"
+          },
+          "ads": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include sponsored results"
+          },
+          "max_age": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Accept a cached result up to this many seconds old (50% of credits on a hit)"
+          },
+          "engine": {
+            "$ref": "#/components/schemas/EngineParam"
+          },
+          "include_domains": {
+            "$ref": "#/components/schemas/DomainList",
+            "description": "Only results from these domains (search, news, images, videos). Compiled into site: operators and enforced on the results. Not with engine=consensus"
+          },
+          "exclude_domains": {
+            "$ref": "#/components/schemas/DomainList",
+            "description": "Drop results from these domains (search, news, images, videos). Not with engine=consensus"
+          },
+          "boost_domains": {
+            "$ref": "#/components/schemas/DomainList",
+            "description": "Move results from these domains to the top, keeping the order within both groups (search, news)"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Only results published on or after this date, YYYY-MM-DD (search, news, images, videos). Can't be combined with time or tbs. A fallback engine without date ranges is skipped"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Only results published on or before this date, YYYY-MM-DD. Can't be combined with time or tbs"
+          },
+          "highlights": {
+            "type": "boolean",
+            "default": false,
+            "description": "Return up to 3 query-ranked passages (`highlights`) of each page read by include_content instead of the whole page (search only; needs include_content; no extra credits)"
+          }
+        }
+      },
+      "DomainList": {
+        "description": "Domains as an array or a comma-separated string, at most 20: a host (`example.com`, subdomains match), a host with a path prefix (`github.com/org`) or a TLD (`.gov`).",
+        "oneOf": [
+          {
+            "type": "string",
+            "examples": [
+              "github.com,en.wikipedia.org"
+            ]
+          },
+          {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "github.com/serpkite",
+                ".gov"
+              ]
+            ]
+          }
+        ]
+      },
+      "Highlight": {
+        "type": "object",
+        "description": "A query-relevant passage of a page, verbatim",
+        "required": [
+          "text",
+          "score"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "description": "Relevance to the query (BM25; higher is better",
+            "comparable within one response)": null
+          },
+          "heading": {
+            "type": "string",
+            "description": "The section heading path the passage sits under"
+          }
+        }
+      },
+      "ReviewsRequest": {
+        "type": "object",
+        "description": "One of place_id, cid or fid is required",
+        "properties": {
+          "place_id": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string"
+          },
+          "fid": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "string",
+            "enum": [
+              "most_relevant",
+              "newest",
+              "highest_rating",
+              "lowest_rating"
+            ],
+            "default": "most_relevant"
+          },
+          "page_token": {
+            "type": "string",
+            "description": "`next_page_token` from the previous page, unchanged. Opaque and bound to the place and `sort` it was issued for (anything else is a 400). Paging reaches the first 100 reviews of a place per sort order."
+          },
+          "num": {
+            "type": "integer",
+            "default": 10,
+            "maximum": 50,
+            "description": "Reviews per page (a page can be shorter when Google stops loading early; `next_page_token` then resumes after it)"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "markdown",
+              "compact"
+            ]
+          },
+          "fields": {
+            "type": "string"
+          },
+          "max_age": {
+            "type": "integer"
+          }
+        }
+      },
+      "WebpageRequest": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "An HTML page or a PDF"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "markdown",
+              "compact"
+            ],
+            "default": "json"
+          },
+          "include_html": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_links": {
+            "type": "boolean",
+            "default": false,
+            "description": "Also return the page's outbound links (`links`)"
+          },
+          "include_images": {
+            "type": "boolean",
+            "default": false,
+            "description": "Also return the page's image URLs (`image_links`)"
+          },
+          "country": {
+            "type": "string",
+            "description": "Fetch through an exit in this country (ISO 3166-1 alpha-2) for geo-dependent pages"
+          },
+          "max_age": {
+            "type": "integer"
+          }
+        }
+      },
+      "ExtractRequest": {
+        "type": "object",
+        "required": [
+          "urls"
+        ],
+        "properties": {
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "HTML pages or PDFs (duplicates are dropped)"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "markdown",
+              "text",
+              "html"
+            ],
+            "default": "markdown"
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "What highlights are ranked against"
+          },
+          "highlights": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "default": 0,
+            "description": "Query-ranked passages per page (BM25; needs query)"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 100000,
+            "description": "Trim each page's markdown or text to about this many tokens"
+          },
+          "include_links": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_images": {
+            "type": "boolean",
+            "default": false
+          },
+          "max_age": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2592000,
+            "description": "Accept a cached page up to this many seconds old (0.5 credit)"
+          },
+          "country": {
+            "type": "string",
+            "description": "Fetch through an exit in this country (ISO 3166-1 alpha-2)"
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90,
+            "default": 50,
+            "description": "Seconds to wait for the pages; a page still loading is listed in `failed` (`upstream_timeout`, not charged)"
+          }
+        }
+      },
+      "ExtractResult": {
+        "type": "object",
+        "required": [
+          "url",
+          "cached"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Final URL after redirects"
+          },
+          "status_code": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "description": "The page's published time as ISO 8601, when it has one"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/PageMetadata"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "markdown": {
+            "type": "string",
+            "description": "format=markdown"
+          },
+          "text": {
+            "type": "string",
+            "description": "format=text"
+          },
+          "html": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "format=html (null for a PDF); at most 2 MiB per page"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            },
+            "description": "include_links=true only"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "include_images=true only"
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Highlight"
+            },
+            "description": "highlights > 0 only"
+          }
+        }
+      },
+      "ExtractFailure": {
+        "type": "object",
+        "required": [
+          "url",
+          "error"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "examples": [
+                  "invalid_request",
+                  "upstream_error",
+                  "upstream_timeout",
+                  "empty_page"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ExtractResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "failed",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "endpoint": {
+                "type": "string",
+                "const": "extract"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "format": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              }
+            }
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtractResult"
+            }
+          },
+          "failed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtractFailure"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "credits_used",
+              "succeeded",
+              "failed"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string"
+              },
+              "credits_used": {
+                "type": "number"
+              },
+              "latency_ms": {
+                "type": "integer"
+              },
+              "succeeded": {
+                "type": "integer"
+              },
+              "failed": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "CrawlRequest": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Start page (always read: path filters and robots.txt apply to the pages found from it)"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 25,
+            "description": "Maximum pages read (and credits reserved)"
+          },
+          "max_depth": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "default": 2,
+            "description": "Link hops from url (sitemap pages count as 1 hop; 0 reads only url)"
+          },
+          "include_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Regular expressions matched against the URL path; follow only paths matching one"
+          },
+          "exclude_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Regular expressions matched against the URL path; never follow paths matching one"
+          },
+          "include_subdomains": {
+            "type": "boolean",
+            "default": false
+          },
+          "sitemap": {
+            "type": "string",
+            "enum": [
+              "include",
+              "only",
+              "skip"
+            ],
+            "default": "include",
+            "description": "`include` also seeds the crawl with the site's sitemap URLs (after the start page's links), `only` reads the start page and sitemap URLs without following links, `skip` follows links only"
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Read the pages most relevant to these words first (best-first crawl)"
+          },
+          "ignore_query_parameters": {
+            "type": "boolean",
+            "default": false,
+            "description": "Treat URLs that differ only in their query string as one page"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "markdown",
+              "text"
+            ],
+            "default": "markdown"
+          },
+          "include_links": {
+            "type": "boolean",
+            "default": false,
+            "description": "Return each page's outbound links"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 100000,
+            "description": "Trim each page to this many tokens"
+          },
+          "max_age": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2592000,
+            "description": "Accept cached pages up to this many seconds old (0.5 credit each)"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Receives the signed `crawl.completed` event. Defaults to the account webhook"
+          }
+        }
+      },
+      "TaskStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "running",
+          "completed",
+          "failed",
+          "canceled"
+        ]
+      },
+      "TaskCreated": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "created_at",
+          "poll_url",
+          "credits_reserved"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "crawl"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "poll_url": {
+            "type": "string"
+          },
+          "credits_reserved": {
+            "type": "number"
+          },
+          "webhook_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "TaskCancelResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "canceled",
+              "canceling"
+            ]
+          }
+        }
+      },
+      "TaskError": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Set when the task failed or was canceled",
+        "properties": {
+          "code": {
+            "type": "string",
+            "examples": [
+              "no_pages",
+              "canceled",
+              "timeout",
+              "internal"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "CrawlPage": {
+        "type": "object",
+        "required": [
+          "url",
+          "depth"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "integer",
+            "description": "Link hops from the start page"
+          },
+          "title": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/PageMetadata"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            }
+          }
+        }
+      },
+      "CrawlResult": {
+        "type": "object",
+        "required": [
+          "url",
+          "pages",
+          "failed",
+          "stats"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrawlPage"
+            }
+          },
+          "failed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtractFailure"
+            }
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "pages": {
+                "type": "integer"
+              },
+              "failed": {
+                "type": "integer"
+              },
+              "seconds": {
+                "type": "integer"
+              },
+              "discovered": {
+                "type": "integer",
+                "description": "Unique URLs found that passed the filters"
+              },
+              "queued": {
+                "type": "integer",
+                "description": "Found but not read when the crawl ended"
+              },
+              "duplicates": {
+                "type": "integer",
+                "description": "Pages that redirected to a page already read (not charged)"
+              },
+              "sitemap_urls": {
+                "type": "integer",
+                "description": "URLs taken from sitemaps"
+              },
+              "robots": {
+                "type": "string",
+                "enum": [
+                  "found",
+                  "missing",
+                  "unreachable",
+                  "none"
+                ],
+                "description": "The start host's robots.txt"
+              },
+              "robots_disallowed": {
+                "type": "integer",
+                "description": "Disallow rules in force on the start host"
+              },
+              "robots_blocked": {
+                "type": "integer",
+                "description": "URLs skipped because robots.txt disallows them"
+              },
+              "crawl_delay_ms": {
+                "type": "integer",
+                "description": "The start host's Crawl-delay, honoured"
+              },
+              "stopped": {
+                "type": "string",
+                "enum": [
+                  "done",
+                  "limit",
+                  "time_limit",
+                  "size_limit",
+                  "too_many_failures",
+                  "canceled"
+                ],
+                "description": "Why the crawl ended"
+              }
+            }
+          }
+        }
+      },
+      "CrawlTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "created_at",
+          "credits_reserved",
+          "credits_used"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "const": "crawl"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "credits_reserved": {
+            "type": "number"
+          },
+          "credits_used": {
+            "type": "number"
+          },
+          "webhook_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "pending",
+              "delivered",
+              "failed",
+              null
+            ]
+          },
+          "progress": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "pages_done": {
+                "type": "integer"
+              },
+              "pages_failed": {
+                "type": "integer"
+              },
+              "pages_queued": {
+                "type": "integer"
+              },
+              "pages_discovered": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              }
+            }
+          },
+          "result": {
+            "description": "Set once the crawl ends (also on cancel, with the pages read so far)",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CrawlResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/TaskError"
+          }
+        }
+      },
+      "MapRequest": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The site (any page of it; sitemaps are read from its origin)"
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Keep only URLs relevant to these words, most relevant first"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000,
+            "default": 100
+          },
+          "include_subdomains": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Regular expressions matched against the URL path; keep only URLs matching one"
+          },
+          "exclude_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Regular expressions matched against the URL path; drop URLs matching one"
+          },
+          "ignore_query_parameters": {
+            "type": "boolean",
+            "default": false,
+            "description": "Treat URLs that differ only in their query string as one (the first one found is kept)"
+          },
+          "sitemap": {
+            "type": "string",
+            "enum": [
+              "include",
+              "only",
+              "skip"
+            ],
+            "default": "include",
+            "description": "`include` sitemaps and the start page's links, `only` sitemaps, `skip` sitemaps (links only)"
+          }
+        }
+      },
+      "MapURL": {
+        "type": "object",
+        "required": [
+          "url",
+          "source"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "lastmod": {
+            "type": "string",
+            "description": "The sitemap's lastmod, as written"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "sitemap",
+              "page"
+            ]
+          }
+        }
+      },
+      "MapResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "endpoint": {
+                "type": "string",
+                "const": "map"
+              },
+              "url": {
+                "type": "string"
+              },
+              "search": {
+                "type": "string"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "sitemap": {
+                "type": "string"
+              },
+              "include_subdomains": {
+                "type": "boolean"
+              },
+              "include_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "exclude_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ignore_query_parameters": {
+                "type": "boolean"
+              }
+            }
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MapURL"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "credits_used",
+              "count"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string"
+              },
+              "credits_used": {
+                "type": "number"
+              },
+              "latency_ms": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "Provider": {
+        "type": "string",
+        "description": "A search provider (docs/providers). Which verticals each serves depends on the deployment.",
+        "enum": [
+          "google",
+          "brave",
+          "bing",
+          "yahoo",
+          "duckduckgo",
+          "mojeek",
+          "wikipedia"
+        ]
+      },
+      "EngineParam": {
+        "description": "Which search providers may answer. `google` (the default) is Google only; within Google, SerpKite always fails over across its own proxy pools. `auto` allows falling back to other enabled providers, in route order, when Google is blocked or times out. A single other provider (`brave`) or a list (`[\"google\",\"brave\"]`, or `google,brave` in a query string) restricts the request to those providers. `meta.engine` always names the provider that answered and credits follow that provider's price. A key with \"Allow fallback to other search engines\" on treats a request without `engine` as `auto`. `consensus` (`/v1/search` only; 400 elsewhere, and it can't be combined with other names) queries several independent search indexes in parallel (at most one Bing-backed provider, so Yahoo or DuckDuckGo never count as agreeing with Bing), merges the results by URL and ranks them by how many providers returned each one. Each result lists its `sources`; `meta.engine` is `consensus` and `meta.route` lists every provider attempt. It stops once `num` unique results are in hand or after a few seconds, and costs the sum of one page at each provider that returned results (providers that failed, came back empty or were never started are free).",
+        "oneOf": [
+          {
+            "type": "string",
+            "default": "google",
+            "examples": [
+              "google",
+              "auto",
+              "consensus",
+              "brave",
+              "google,brave"
+            ]
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Provider"
+            },
+            "minItems": 1
+          }
+        ]
+      },
+      "RouteStep": {
+        "type": "object",
+        "description": "One provider attempt behind this answer. Proxy pools are internal and never listed.",
+        "required": [
+          "provider",
+          "outcome",
+          "ms"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "examples": [
+              "google",
+              "brave"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "partial",
+              "empty",
+              "soft_empty",
+              "blocked",
+              "timeout",
+              "error",
+              "unsupported",
+              "bad_param",
+              "bad_target",
+              "canceled"
+            ]
+          },
+          "ms": {
+            "type": "integer",
+            "description": "Duration of the attempt in milliseconds"
+          }
+        }
+      },
+      "Meta": {
+        "type": "object",
+        "required": [
+          "request_id",
+          "credits_used",
+          "cached"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string"
+          },
+          "credits_used": {
+            "type": "number"
+          },
+          "engine": {
+            "type": "string",
+            "description": "The provider that produced the result (`consensus` for a merged engine=consensus answer)",
+            "examples": [
+              "google",
+              "brave",
+              "consensus",
+              "stub"
+            ]
+          },
+          "route": {
+            "type": "array",
+            "description": "Provider attempts in order (fresh results only; absent on cache hits). With engine=consensus, every provider started; ones stopped early are `canceled`, ones cut off by the deadline `timeout`",
+            "items": {
+              "$ref": "#/components/schemas/RouteStep"
+            }
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "cached_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolved_urls": {
+            "type": "boolean"
+          },
+          "parse_quality": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "partial",
+              "empty"
+            ]
+          },
+          "latency_ms": {
+            "type": "integer"
+          }
+        }
+      },
+      "RequestEcho": {
+        "type": "object",
+        "description": "The normalised request that produced this response (defaults filled in)",
+        "required": [
+          "endpoint",
+          "engine"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "examples": [
+              "search",
+              "news",
+              "webpage"
+            ]
+          },
+          "engine": {
+            "description": "The engine policy as asked (google, auto, one provider or a list)",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "q": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "num": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "device": {
+            "type": "string"
+          },
+          "autocorrect": {
+            "type": "boolean"
+          },
+          "tbs": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "safe": {
+            "type": "string"
+          },
+          "place_id": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string"
+          },
+          "fid": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "string"
+          },
+          "include_content": {
+            "type": "integer"
+          },
+          "format": {
+            "type": "string"
+          },
+          "include_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "boost_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highlights": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Sitelink": {
+        "type": "object",
+        "required": [
+          "title",
+          "link"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganicResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "link",
+          "domain"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string",
+            "description": "Resolved destination URL (never a google.com/url or /goto redirect)"
+          },
+          "domain": {
+            "type": "string",
+            "description": "Canonical host without www."
+          },
+          "displayed_link": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "sitelinks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Sitelink"
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "rating": {
+            "type": "number"
+          },
+          "rating_count": {
+            "type": "integer"
+          },
+          "published_at": {
+            "type": "string",
+            "description": "`date` as an ISO 8601 date or date-time when it parses (relative dates resolved against the fetch time)",
+            "examples": [
+              "2026-09-30",
+              "2026-10-03T09:00:00Z"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "Page Markdown when include_content covered this result"
+          },
+          "highlights": {
+            "type": "array",
+            "description": "highlights=true only. Query-ranked passages of the fetched page, best first (instead of content)",
+            "items": {
+              "$ref": "#/components/schemas/Highlight"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "description": "engine=consensus only. The providers that returned this result, in route order; results are ranked by how many there are",
+            "items": {
+              "$ref": "#/components/schemas/Provider"
+            },
+            "examples": [
+              [
+                "google",
+                "brave",
+                "bing"
+              ]
+            ]
+          }
+        }
+      },
+      "AnswerBox": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "snippet_highlighted": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "link": {
+            "type": "string"
+          }
+        }
+      },
+      "KnowledgeGraph": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "description_source": {
+            "type": "string"
+          },
+          "description_link": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PeopleAlsoAsk": {
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          }
+        }
+      },
+      "RelatedSearch": {
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "related_searches",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganicResult"
+            }
+          },
+          "answer_box": {
+            "$ref": "#/components/schemas/AnswerBox"
+          },
+          "knowledge_graph": {
+            "$ref": "#/components/schemas/KnowledgeGraph"
+          },
+          "ads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganicResult"
+            }
+          },
+          "people_also_ask": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeopleAlsoAsk"
+            }
+          },
+          "related_searches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelatedSearch"
+            }
+          },
+          "top_stories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsResult"
+            }
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaceResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ImageResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "image_url"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "image_width": {
+            "type": "integer"
+          },
+          "image_height": {
+            "type": "integer"
+          },
+          "thumbnail_url": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          }
+        }
+      },
+      "ImagesResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "VideoResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "link"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "description": "`date` as ISO 8601 when it parses"
+          }
+        }
+      },
+      "VideosResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "NewsResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "link"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "description": "`date` as ISO 8601 when it parses"
+          },
+          "source": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      },
+      "NewsResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "PlaceResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "rating_count": {
+            "type": "integer"
+          },
+          "price_level": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "website": {
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string"
+          },
+          "opening_hours": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "thumbnail_url": {
+            "type": "string"
+          },
+          "place_id": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string"
+          },
+          "fid": {
+            "type": "string"
+          }
+        }
+      },
+      "PlacesResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaceResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ReviewResult": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string"
+          },
+          "iso_date": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "thumbnail": {
+                "type": "string"
+              },
+              "reviews": {
+                "type": "integer"
+              }
+            }
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "snippet": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ReviewsResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewResult"
+            }
+          },
+          "next_page_token": {
+            "type": "string",
+            "description": "Pass as `page_token` for the next page. Absent on the last page and at the 100-review depth limit"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ShoppingResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "price_value": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "delivery": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "rating_count": {
+            "type": "integer"
+          },
+          "offers": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ShoppingResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShoppingResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ScholarResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "link"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "publication_info": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "cited_by": {
+            "type": "integer"
+          },
+          "pdf_url": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "ScholarResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScholarResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "PatentResult": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "link"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "publication_number": {
+            "type": "string"
+          },
+          "priority_date": {
+            "type": "string"
+          },
+          "filing_date": {
+            "type": "string"
+          },
+          "grant_date": {
+            "type": "string"
+          },
+          "publication_date": {
+            "type": "string"
+          },
+          "inventor": {
+            "type": "string"
+          },
+          "assignee": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "pdf_url": {
+            "type": "string"
+          },
+          "thumbnail_url": {
+            "type": "string"
+          }
+        }
+      },
+      "PatentsResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatentResult"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "Suggestion": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "AutocompleteResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "results",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Suggestion"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "PageMetadata": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "canonical": {
+            "type": "string"
+          },
+          "site_name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "published_time": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "content_type": {
+            "type": "string",
+            "description": "The page's media type",
+            "examples": [
+              "text/html",
+              "application/pdf"
+            ]
+          },
+          "pages": {
+            "type": "integer",
+            "description": "Page count of a PDF"
+          }
+        }
+      },
+      "PageLink": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Absolute URL"
+          },
+          "text": {
+            "type": "string",
+            "description": "Anchor text"
+          }
+        }
+      },
+      "WebpageResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "url",
+          "markdown",
+          "metadata",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "url": {
+            "type": "string",
+            "description": "Final URL after redirects"
+          },
+          "status_code": {
+            "type": "integer"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "html": {
+            "type": "string",
+            "description": "Only with include_html=true"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/PageMetadata"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            },
+            "description": "include_links=true only. Outbound links in document order, deduplicated"
+          },
+          "image_links": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "include_images=true only. Image URLs in document order"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "CSEResponse": {
+        "type": "object",
+        "required": [
+          "kind",
+          "searchInformation",
+          "items"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "customsearch#search"
+          },
+          "url": {
+            "type": "object"
+          },
+          "queries": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "context": {
+            "type": "object"
+          },
+          "searchInformation": {
+            "type": "object",
+            "properties": {
+              "searchTime": {
+                "type": "number"
+              },
+              "formattedSearchTime": {
+                "type": "string"
+              },
+              "totalResults": {
+                "type": "string"
+              },
+              "formattedTotalResults": {
+                "type": "string"
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "customsearch#result"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "htmlTitle": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "displayLink": {
+                  "type": "string"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "htmlSnippet": {
+                  "type": "string"
+                },
+                "formattedUrl": {
+                  "type": "string"
+                },
+                "htmlFormattedUrl": {
+                  "type": "string"
+                },
+                "pagemap": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "image": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "RankRequest": {
+        "type": "object",
+        "required": [
+          "q",
+          "domain"
+        ],
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string",
+            "description": "Domain to find, e.g. \"example.com\" (subdomains match)"
+          },
+          "num": {
+            "type": "integer",
+            "enum": [
+              10,
+              20,
+              30,
+              50,
+              100
+            ],
+            "default": 100
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "desktop",
+              "mobile"
+            ]
+          },
+          "max_age": {
+            "type": "integer"
+          }
+        }
+      },
+      "RankResponse": {
+        "type": "object",
+        "required": [
+          "request",
+          "domain",
+          "position",
+          "matches",
+          "checked",
+          "meta"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/RequestEcho"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "position": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Best organic position",
+            "null when not in the checked results": null
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "position",
+                "title",
+                "link"
+              ],
+              "properties": {
+                "position": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "checked": {
+            "type": "integer",
+            "description": "Organic results inspected"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "required": [
+          "status",
+          "window_minutes",
+          "endpoints",
+          "updated_at"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "operational",
+              "degraded"
+            ]
+          },
+          "window_minutes": {
+            "type": "integer"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "endpoint",
+                "requests",
+                "success_rate",
+                "p50_ms",
+                "p95_ms"
+              ],
+              "properties": {
+                "endpoint": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                },
+                "success_rate": {
+                  "type": "number",
+                  "description": "Share of requests without a 5xx (0-1)"
+                },
+                "p50_ms": {
+                  "type": "integer"
+                },
+                "p95_ms": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BatchCreateRequest": {
+        "type": "object",
+        "required": [
+          "endpoint",
+          "requests"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "enum": [
+              "search",
+              "images",
+              "videos",
+              "news",
+              "maps",
+              "places",
+              "reviews",
+              "shopping",
+              "scholar",
+              "patents",
+              "autocomplete",
+              "webpage"
+            ]
+          },
+          "requests": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "description": "Request bodies for `endpoint` (same fields as the realtime endpoint)",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "POSTed each job's result, always signed with X-SerpKite-Signature (v1=hex HMAC-SHA256 of `<timestamp>.<body>` with the account webhook secret; see createBatches). Defaults to the account webhook"
+          }
+        }
+      },
+      "BatchCreateResponse": {
+        "type": "object",
+        "required": [
+          "batches"
+        ],
+        "properties": {
+          "batches": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Batch"
+                },
+                {
+                  "$ref": "#/components/schemas/Error"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Batch": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "endpoint",
+          "created_at",
+          "poll_url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "done",
+              "failed"
+            ]
+          },
+          "endpoint": {
+            "type": "string",
+            "examples": [
+              "/v1/search"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "credits_used": {
+            "type": "number"
+          },
+          "poll_url": {
+            "type": "string"
+          },
+          "webhook_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhook_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "pending",
+              "delivered",
+              "failed",
+              null
+            ]
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "Present when done; kept 24h. The endpoint's response body, or {markdown, meta} for format=markdown jobs"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "required": [
+          "balance",
+          "rate_limit_rps",
+          "plan",
+          "month"
+        ],
+        "properties": {
+          "balance": {
+            "type": "number",
+            "description": "Negative after a refund of credits that were already spent; requests then get 402 insufficient_credits"
+          },
+          "rate_limit_rps": {
+            "type": "integer"
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "free",
+              "paid"
+            ]
+          },
+          "key": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "credit_limit": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "credits_used_month": {
+                "type": "number"
+              }
+            }
+          },
+          "monthly_spend_cap": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "month": {
+            "type": "object",
+            "required": [
+              "credits",
+              "requests"
+            ],
+            "properties": {
+              "credits": {
+                "type": "number"
+              },
+              "requests": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "TaskCompletedEvent": {
+        "type": "object",
+        "description": "Body of `crawl.completed`",
+        "required": [
+          "event",
+          "id",
+          "kind",
+          "status",
+          "created_at",
+          "credits_used"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "crawl.completed"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "const": "crawl"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "credits_used": {
+            "type": "number"
+          },
+          "poll_url": {
+            "type": "string",
+            "description": "Where the task (and its full result) can be fetched for 24 hours"
+          },
+          "result": {
+            "description": "The CrawlResult (null when the crawl failed without one, or when it is larger than 4 MB: see result_omitted)"
+          },
+          "result_omitted": {
+            "type": "boolean",
+            "description": "Set when the result was too large for the webhook; GET poll_url for it"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "MonitorSearch": {
+        "type": "object",
+        "description": "The saved request a monitor reruns: a search (q and options) or, for webpage monitors, url (and country)",
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "num": {
+            "type": "integer"
+          },
+          "device": {
+            "type": "string"
+          },
+          "safe": {
+            "type": "string"
+          },
+          "include_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "engine": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MonitorCreateRequest": {
+        "type": "object",
+        "description": "Search and news monitors need `q`; webpage monitors need `url` and take only `country` besides",
+        "properties": {
+          "q": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "endpoint=webpage: the page to watch for content changes"
+          },
+          "endpoint": {
+            "type": "string",
+            "enum": [
+              "search",
+              "news",
+              "webpage"
+            ],
+            "default": "search"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Your own JSON object (at most 2 KB), echoed on the monitor and in its webhooks"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly"
+            ],
+            "default": "daily"
+          },
+          "interval_seconds": {
+            "type": "integer",
+            "minimum": 3600,
+            "maximum": 2592000,
+            "description": "Overrides interval"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Receives signed `monitor.results` events. Without one, read new results from the run history"
+          },
+          "active": {
+            "type": "boolean",
+            "default": true,
+            "description": "false creates the monitor paused"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "num": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "desktop",
+              "mobile"
+            ]
+          },
+          "safe": {
+            "type": "string",
+            "enum": [
+              "active",
+              "off"
+            ]
+          },
+          "include_domains": {
+            "$ref": "#/components/schemas/DomainList"
+          },
+          "exclude_domains": {
+            "$ref": "#/components/schemas/DomainList"
+          },
+          "engine": {
+            "$ref": "#/components/schemas/EngineParam"
+          }
+        }
+      },
+      "MonitorUpdateRequest": {
+        "type": "object",
+        "description": "Only the fields sent change. Search fields are merged into the saved search; a changed search (or endpoint) makes the next run report every result as new.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly"
+            ]
+          },
+          "interval_seconds": {
+            "type": "integer",
+            "minimum": 3600,
+            "maximum": 2592000
+          },
+          "webhook_url": {
+            "type": "string",
+            "description": "A webhook URL, or an empty string to remove it"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "true resumes a paused monitor (due now, failure streak cleared)"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "Replaces the metadata (null clears it)"
+          },
+          "endpoint": {
+            "type": "string",
+            "enum": [
+              "search",
+              "news",
+              "webpage"
+            ],
+            "description": "Switching between a search and a page drops the other kind's fields"
+          },
+          "q": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "endpoint=webpage only"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "num": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "desktop",
+              "mobile"
+            ]
+          },
+          "safe": {
+            "type": "string",
+            "enum": [
+              "active",
+              "off"
+            ]
+          },
+          "include_domains": {
+            "$ref": "#/components/schemas/DomainList"
+          },
+          "exclude_domains": {
+            "$ref": "#/components/schemas/DomainList"
+          },
+          "engine": {
+            "$ref": "#/components/schemas/EngineParam"
+          }
+        }
+      },
+      "Monitor": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "endpoint",
+          "request",
+          "interval_seconds",
+          "webhook_url",
+          "active",
+          "next_run_at",
+          "runs",
+          "consecutive_failures",
+          "credits_used",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string",
+            "enum": [
+              "search",
+              "news",
+              "webpage"
+            ]
+          },
+          "request": {
+            "$ref": "#/components/schemas/MonitorSearch"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "interval_seconds": {
+            "type": "integer"
+          },
+          "webhook_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Null when new results are only kept in the run history"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "next_run_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_run_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "ok",
+              "error",
+              "webhook_failed",
+              "paused",
+              null
+            ]
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_new_results": {
+            "type": "integer",
+            "description": "New results found by the last run"
+          },
+          "runs": {
+            "type": "integer"
+          },
+          "consecutive_failures": {
+            "type": "integer",
+            "description": "Failed runs in a row; the monitor pauses itself at 10"
+          },
+          "credits_used": {
+            "type": "number",
+            "description": "Total over all runs"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MonitorRun": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "new_results",
+          "credits_used",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error",
+              "webhook_failed",
+              "paused"
+            ]
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "new_results": {
+            "type": "integer"
+          },
+          "results": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "description": "The new results (OrganicResult-shaped for search, NewsResult for news, MonitorPageChange for webpage); null when there were none or after 24 hours",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "credits_used": {
+            "type": "number"
+          },
+          "webhook_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "delivered",
+              "failed",
+              "none",
+              null
+            ],
+            "description": "none = the monitor has no webhook; null = nothing to send"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MonitorPageChange": {
+        "type": "object",
+        "description": "What a webpage monitor reports when the page is new to it or its content changed",
+        "required": [
+          "url",
+          "change",
+          "content_hash",
+          "markdown"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Final URL after redirects"
+          },
+          "title": {
+            "type": "string"
+          },
+          "change": {
+            "type": "string",
+            "enum": [
+              "new",
+              "changed"
+            ]
+          },
+          "content_hash": {
+            "type": "string",
+            "description": "Fingerprint of the content (whitespace-insensitive)"
+          },
+          "markdown": {
+            "type": "string",
+            "description": "The page's Markdown (up to about 8",
+            "000 tokens)": null
+          },
+          "published_at": {
+            "type": "string"
+          }
+        }
+      },
+      "MonitorRunList": {
+        "type": "object",
+        "required": [
+          "results",
+          "next_before"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonitorRun"
+            }
+          },
+          "next_before": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Pass as `before` for the next page; null on the last page"
+          }
+        }
+      },
+      "MonitorList": {
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Monitor"
+            }
+          }
+        }
+      },
+      "MonitorResultsEvent": {
+        "type": "object",
+        "description": "Body of `monitor.results`",
+        "required": [
+          "event",
+          "monitor_id",
+          "run_id",
+          "name",
+          "endpoint",
+          "q",
+          "first_run",
+          "run_at",
+          "new_results",
+          "credits_used"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "monitor.results"
+          },
+          "monitor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Also the X-SerpKite-Delivery header; use it to deduplicate retries"
+          },
+          "name": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string",
+            "enum": [
+              "search",
+              "news",
+              "webpage"
+            ]
+          },
+          "q": {
+            "type": "string",
+            "description": "The saved query (empty for webpage monitors)"
+          },
+          "url": {
+            "type": "string",
+            "description": "webpage monitors only"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "The monitor's metadata"
+          },
+          "first_run": {
+            "type": "boolean",
+            "description": "The first run since the monitor was created or its search changed"
+          },
+          "run_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "new_results": {
+            "type": "array",
+            "description": "Results not seen in earlier runs (OrganicResult-shaped for search, NewsResult for news, MonitorPageChange for webpage)",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "credits_used": {
+            "type": "number",
+            "description": "This run's price"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "url": "/v1/webpage",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "url": "{{parameters.url}}"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "url": "/v1/search",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "page": 1
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "position": "{{item.position}}",
+      "title": "{{item.title}}",
+      "link": "{{item.link}}",
+      "domain": "{{item.domain}}",
+      "snippet": "{{item.snippet}}"
+    }
+  },
+  "pagination": {
+    "body": {
+      "q": "{{parameters.q}}",
+      "country": "{{parameters.country}}",
+      "language": "{{parameters.language}}",
+      "page": "{{pagination.page}}"
+    },
+    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+  }
+}

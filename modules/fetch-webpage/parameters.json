@@ -1,0 +1,9 @@
+[
+  {
+    "name": "url",
+    "label": "URL",
+    "type": "url",
+    "required": true,
+    "help": "Public HTML or PDF URL. Fetching uses one credit."
+  }
+]

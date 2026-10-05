@@ -1,0 +1,59 @@
+[
+  {
+    "name": "url",
+    "label": "URL",
+    "type": "text",
+    "required": true,
+    "help": "Path relative to https://api.serpkite.com, starting with /. Example: /v1/account. Full external URLs are not supported."
+  },
+  {
+    "name": "method",
+    "label": "Method",
+    "type": "select",
+    "required": true,
+    "default": "GET",
+    "options": [
+      {
+        "label": "GET",
+        "value": "GET"
+      },
+      {
+        "label": "POST",
+        "value": "POST"
+      },
+      {
+        "label": "PATCH",
+        "value": "PATCH"
+      },
+      {
+        "label": "DELETE",
+        "value": "DELETE"
+      }
+    ]
+  },
+  {
+    "name": "qs",
+    "label": "Query String",
+    "type": "array",
+    "spec": [
+      {
+        "name": "key",
+        "label": "Key",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "value",
+        "label": "Value",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "body",
+    "label": "Body",
+    "type": "text",
+    "help": "JSON request body. Use JSON > Create JSON for escaped values. The connection provides authorization."
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "balance",
+    "label": "Balance",
+    "type": "number"
+  },
+  {
+    "name": "rate_limit_rps",
+    "label": "Rate Limit RPS",
+    "type": "number"
+  },
+  {
+    "name": "plan",
+    "label": "Plan",
+    "type": "text"
+  },
+  {
+    "name": "month",
+    "label": "Month",
+    "type": "collection",
+    "spec": []
+  }
+]

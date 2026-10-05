@@ -1,0 +1,10 @@
+[
+  {
+    "name": "apiKey",
+    "label": "API Key",
+    "type": "password",
+    "required": true,
+    "editable": true,
+    "help": "Create a key at https://app.serpkite.com. Use a dedicated key with a monthly credit limit."
+  }
+]

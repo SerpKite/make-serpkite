@@ -1,0 +1,38 @@
+{
+  "url": "/v1/places",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "page": 1
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "position": "{{item.position}}",
+      "title": "{{item.title}}",
+      "address": "{{item.address}}",
+      "latitude": "{{item.latitude}}",
+      "longitude": "{{item.longitude}}",
+      "rating": "{{item.rating}}",
+      "rating_count": "{{item.rating_count}}",
+      "website": "{{item.website}}",
+      "phone_number": "{{item.phone_number}}",
+      "place_id": "{{item.place_id}}",
+      "cid": "{{item.cid}}",
+      "fid": "{{item.fid}}"
+    }
+  },
+  "pagination": {
+    "body": {
+      "q": "{{parameters.q}}",
+      "country": "{{parameters.country}}",
+      "language": "{{parameters.language}}",
+      "page": "{{pagination.page}}"
+    },
+    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "url": "/v1/patents",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "page": 1
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "position": "{{item.position}}",
+      "title": "{{item.title}}",
+      "snippet": "{{item.snippet}}",
+      "link": "{{item.link}}",
+      "publication_number": "{{item.publication_number}}",
+      "inventor": "{{item.inventor}}",
+      "assignee": "{{item.assignee}}",
+      "language": "{{item.language}}",
+      "pdf_url": "{{item.pdf_url}}"
+    }
+  },
+  "pagination": {
+    "body": {
+      "q": "{{parameters.q}}",
+      "country": "{{parameters.country}}",
+      "language": "{{parameters.language}}",
+      "page": "{{pagination.page}}"
+    },
+    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+  }
+}

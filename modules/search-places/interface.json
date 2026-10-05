@@ -1,0 +1,62 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "address",
+    "label": "Address",
+    "type": "text"
+  },
+  {
+    "name": "latitude",
+    "label": "Latitude",
+    "type": "number"
+  },
+  {
+    "name": "longitude",
+    "label": "Longitude",
+    "type": "number"
+  },
+  {
+    "name": "rating",
+    "label": "Rating",
+    "type": "number"
+  },
+  {
+    "name": "rating_count",
+    "label": "Rating Count",
+    "type": "number"
+  },
+  {
+    "name": "website",
+    "label": "Website",
+    "type": "text"
+  },
+  {
+    "name": "phone_number",
+    "label": "Phone Number",
+    "type": "text"
+  },
+  {
+    "name": "place_id",
+    "label": "Place Id",
+    "type": "text"
+  },
+  {
+    "name": "cid",
+    "label": "Cid",
+    "type": "text"
+  },
+  {
+    "name": "fid",
+    "label": "Fid",
+    "type": "text"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "snippet",
+    "label": "Snippet",
+    "type": "text"
+  },
+  {
+    "name": "link",
+    "label": "Link",
+    "type": "text"
+  },
+  {
+    "name": "publication_number",
+    "label": "Publication Number",
+    "type": "text"
+  },
+  {
+    "name": "inventor",
+    "label": "Inventor",
+    "type": "text"
+  },
+  {
+    "name": "assignee",
+    "label": "Assignee",
+    "type": "text"
+  },
+  {
+    "name": "language",
+    "label": "Language",
+    "type": "text"
+  },
+  {
+    "name": "pdf_url",
+    "label": "Pdf Url",
+    "type": "text"
+  }
+]

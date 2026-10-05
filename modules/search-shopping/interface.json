@@ -1,0 +1,57 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "source",
+    "label": "Source",
+    "type": "text"
+  },
+  {
+    "name": "link",
+    "label": "Link",
+    "type": "text"
+  },
+  {
+    "name": "price",
+    "label": "Price",
+    "type": "text"
+  },
+  {
+    "name": "price_value",
+    "label": "Price Value",
+    "type": "number"
+  },
+  {
+    "name": "currency",
+    "label": "Currency",
+    "type": "text"
+  },
+  {
+    "name": "image_url",
+    "label": "Image Url",
+    "type": "text"
+  },
+  {
+    "name": "rating",
+    "label": "Rating",
+    "type": "number"
+  },
+  {
+    "name": "rating_count",
+    "label": "Rating Count",
+    "type": "number"
+  },
+  {
+    "name": "product_id",
+    "label": "Product Id",
+    "type": "text"
+  }
+]

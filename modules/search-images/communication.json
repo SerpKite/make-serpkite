@@ -1,0 +1,35 @@
+{
+  "url": "/v1/images",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "page": 1
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "position": "{{item.position}}",
+      "title": "{{item.title}}",
+      "image_url": "{{item.image_url}}",
+      "thumbnail_url": "{{item.thumbnail_url}}",
+      "link": "{{item.link}}",
+      "source": "{{item.source}}",
+      "domain": "{{item.domain}}",
+      "image_width": "{{item.image_width}}",
+      "image_height": "{{item.image_height}}"
+    }
+  },
+  "pagination": {
+    "body": {
+      "q": "{{parameters.q}}",
+      "country": "{{parameters.country}}",
+      "language": "{{parameters.language}}",
+      "page": "{{pagination.page}}"
+    },
+    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+  }
+}

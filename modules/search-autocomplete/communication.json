@@ -1,0 +1,17 @@
+{
+  "url": "/v1/autocomplete",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}"
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "value": "{{item.value}}"
+    }
+  }
+}

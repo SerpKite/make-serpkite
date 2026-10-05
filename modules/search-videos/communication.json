@@ -1,0 +1,35 @@
+{
+  "url": "/v1/videos",
+  "method": "POST",
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "page": 1
+  },
+  "response": {
+    "iterate": "{{body.results}}",
+    "limit": "{{parameters.limit}}",
+    "output": {
+      "position": "{{item.position}}",
+      "title": "{{item.title}}",
+      "link": "{{item.link}}",
+      "domain": "{{item.domain}}",
+      "snippet": "{{item.snippet}}",
+      "image_url": "{{item.image_url}}",
+      "duration": "{{item.duration}}",
+      "source": "{{item.source}}",
+      "channel": "{{item.channel}}"
+    }
+  },
+  "pagination": {
+    "body": {
+      "q": "{{parameters.q}}",
+      "country": "{{parameters.country}}",
+      "language": "{{parameters.language}}",
+      "page": "{{pagination.page}}"
+    },
+    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "link",
+    "label": "Link",
+    "type": "text"
+  },
+  {
+    "name": "snippet",
+    "label": "Snippet",
+    "type": "text"
+  },
+  {
+    "name": "publication_info",
+    "label": "Publication Info",
+    "type": "text"
+  },
+  {
+    "name": "year",
+    "label": "Year",
+    "type": "number"
+  },
+  {
+    "name": "pdf_url",
+    "label": "Pdf Url",
+    "type": "text"
+  },
+  {
+    "name": "id",
+    "label": "Id",
+    "type": "text"
+  }
+]

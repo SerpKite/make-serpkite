@@ -1,0 +1,107 @@
+{
+  "name": "serpkite",
+  "label": "SerpKite",
+  "version": 1,
+  "description": "Search and public web content for automation.",
+  "connection": {
+    "name": "serpkite-api-key",
+    "label": "SerpKite API Key",
+    "type": "api-key"
+  },
+  "modules": [
+    {
+      "name": "search-search",
+      "label": "Search Web Results",
+      "type": "search",
+      "description": "Returns matching search results as individual bundles.",
+      "endpoint": "/v1/search"
+    },
+    {
+      "name": "search-news",
+      "label": "Search News Articles",
+      "type": "search",
+      "description": "Returns matching news results as individual bundles.",
+      "endpoint": "/v1/news"
+    },
+    {
+      "name": "search-images",
+      "label": "Search Images",
+      "type": "search",
+      "description": "Returns matching images results as individual bundles.",
+      "endpoint": "/v1/images"
+    },
+    {
+      "name": "search-videos",
+      "label": "Search Videos",
+      "type": "search",
+      "description": "Returns matching videos results as individual bundles.",
+      "endpoint": "/v1/videos"
+    },
+    {
+      "name": "search-maps",
+      "label": "Search Maps Places",
+      "type": "search",
+      "description": "Returns matching maps results as individual bundles.",
+      "endpoint": "/v1/maps"
+    },
+    {
+      "name": "search-places",
+      "label": "Search Places",
+      "type": "search",
+      "description": "Returns matching places results as individual bundles.",
+      "endpoint": "/v1/places"
+    },
+    {
+      "name": "search-shopping",
+      "label": "Search Products",
+      "type": "search",
+      "description": "Returns matching shopping results as individual bundles.",
+      "endpoint": "/v1/shopping"
+    },
+    {
+      "name": "search-scholar",
+      "label": "Search Papers",
+      "type": "search",
+      "description": "Returns matching scholar results as individual bundles.",
+      "endpoint": "/v1/scholar"
+    },
+    {
+      "name": "search-patents",
+      "label": "Search Patents",
+      "type": "search",
+      "description": "Returns matching patents results as individual bundles.",
+      "endpoint": "/v1/patents"
+    },
+    {
+      "name": "search-autocomplete",
+      "label": "Get Query Suggestions",
+      "type": "search",
+      "description": "Returns matching autocomplete results as individual bundles.",
+      "endpoint": "/v1/autocomplete"
+    },
+    {
+      "name": "get-account",
+      "label": "Get Account Balance",
+      "type": "action",
+      "description": "Returns the account balance and current limits.",
+      "endpoint": "/v1/account"
+    },
+    {
+      "name": "fetch-webpage",
+      "label": "Fetch a Webpage",
+      "type": "action",
+      "description": "Returns the public page content and metadata.",
+      "endpoint": "/v1/webpage"
+    },
+    {
+      "name": "make-an-api-call",
+      "label": "Make an API Call",
+      "type": "universal",
+      "description": "Performs an arbitrary authorized API call.",
+      "endpoint": "relative path on api.serpkite.com"
+    }
+  ],
+  "website": "https://serpkite.com",
+  "support": "support@serpkite.com",
+  "status": "prepared locally; not deployed or scenario-tested"
+}

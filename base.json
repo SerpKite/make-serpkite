@@ -1,0 +1,21 @@
+{
+  "baseUrl": "https://api.serpkite.com",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "response": {
+    "error": {
+      "message": "[{{statusCode}} / {{body.error.code}}] {{body.error.message}}"
+    }
+  },
+  "log": {
+    "sanitize": [
+      "request.headers.Authorization",
+      "request.body.q",
+      "request.body.webhook_url",
+      "response.body.request.q",
+      "response.body.webhook_url"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "url": "https://api.serpkite.com/v1/account",
+  "method": "GET",
+  "headers": {
+    "Authorization": "Bearer {{parameters.apiKey}}"
+  },
+  "response": {
+    "error": {
+      "message": "[{{statusCode}} / {{body.error.code}}] {{body.error.message}}"
+    }
+  },
+  "log": {
+    "sanitize": [
+      "request.headers.Authorization"
+    ]
+  }
+}

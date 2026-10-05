@@ -1,0 +1,37 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "link",
+    "label": "Link",
+    "type": "text"
+  },
+  {
+    "name": "domain",
+    "label": "Domain",
+    "type": "text"
+  },
+  {
+    "name": "snippet",
+    "label": "Snippet",
+    "type": "text"
+  },
+  {
+    "name": "source",
+    "label": "Source",
+    "type": "text"
+  },
+  {
+    "name": "image_url",
+    "label": "Image Url",
+    "type": "text"
+  }
+]

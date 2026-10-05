@@ -1,0 +1,23 @@
+[
+  {
+    "name": "request",
+    "label": "Request",
+    "type": "collection",
+    "spec": []
+  },
+  {
+    "name": "results",
+    "label": "Results",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": []
+    }
+  },
+  {
+    "name": "meta",
+    "label": "Meta",
+    "type": "collection",
+    "spec": []
+  }
+]
