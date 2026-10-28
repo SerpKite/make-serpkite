@@ -20,46 +20,68 @@ for path in root.glob("**/*.json"):
     assert not re.search(r"skt_live_[a-zA-Z0-9]{10,}", path.read_text())
 base = json.loads((root / "base.json").read_text())
 assert base["baseUrl"] == "https://api.serpkite.com"
+assert base["timeout"] == "{{common.timeout}}"
+assert 40000 < json.loads((root / "common.json").read_text())["timeout"] <= 300000
 assert "request.headers.Authorization" in base["log"]["sanitize"]
 connection = json.loads((root / "connection/communication.json").read_text())
 assert connection["url"] == "https://api.serpkite.com/v1/account"
 assert "parameters.apiKey" in connection["headers"]["Authorization"]
 manifest = json.loads((root / "app-components.json").read_text())
+groups = json.loads((root / "groups.json").read_text())
+assert sorted(m for g in groups for m in g["modules"]) == sorted(m["name"] for m in manifest["modules"])
+assert [g for g in groups if g["label"] == "Other"][0]["modules"] == ["makeAnApiCall"]
 for module in manifest["modules"]:
-    folder = root / "modules" / module["name"]
+    folder = root / "modules" / module["folder"]
     comm = json.loads((folder / "communication.json").read_text())
     params = json.loads((folder / "parameters.json").read_text())
     interface = json.loads((folder / "interface.json").read_text())
+    sample = json.loads((folder / "sample.json").read_text())
+    proper = ["Google Maps", "Google AI Mode", "API", "ChatGPT", "Gemini", "Copilot Search", "Brave AI", "URLs"]
+    rest = module["label"][1:]
+    for noun in proper:
+        rest = rest.replace(noun, noun.lower())
+    assert rest == rest.lower(), module["label"]
     if module["type"] == "universal":
-        assert comm["url"].startswith("https://api.serpkite.com/")
-        assert comm["url"].count("parameters.url") == 1
-        assert "headers" not in comm
+        assert comm["url"] == "https://api.serpkite.com/{{parameters.url}}"
+        assert [p["name"] for p in params] == ["url", "method", "headers", "qs", "body"]
+        assert module["label"] == "Make an API call"
         continue
-    assert module["endpoint"] in spec["paths"]
-    if module["type"] == "search":
-        request = resolve(spec["paths"][module["endpoint"]]["post"]["requestBody"])
+    path = module["endpoint"].replace("{{parameters.id}}", "{id}")
+    assert path in spec["paths"], path
+    assert set(sample) <= {f["name"] for f in interface}, module["name"]
+    if comm["method"] == "POST":
+        request = resolve(spec["paths"][path]["post"]["requestBody"])
         schema = resolve(request["content"]["application/json"]["schema"])
-        assert set(comm["body"]) <= set(schema["properties"])
-        assert any(p["name"] == "limit" for p in params)
-        response = resolve(
-            spec["paths"][module["endpoint"]]["post"]["responses"]["200"]
-        )
+        props = dict(schema.get("properties", {}))
+        for part in schema.get("allOf", []):
+            props.update(resolve(part).get("properties", {}))
+        assert set(comm["body"]) <= set(props), (module["name"], set(comm["body"]) - set(props))
+        assert {p["name"] for p in params} - {"limit"} <= set(props) | {"limit"}
+        assert "timeout" not in comm  # the base's common timeout applies
+    if module["type"] == "search" and comm["method"] == "GET":
+        op = spec["paths"][module["endpoint"]]["post"]
+        request = resolve(op["requestBody"])
+        schema = resolve(request["content"]["application/json"]["schema"])
+        assert comm["method"] == "GET" and set(comm["qs"]) <= set(schema["properties"])
+        assert [p["name"] for p in params if p.get("required")] == ["q"]
+        limit = [p for p in params if p["name"] == "limit"][0]
+        assert limit["type"] == "uinteger" and limit["default"] == 10 and not limit.get("required") and not limit.get("advanced")
+        response = resolve(op["responses"]["200"])
         result = resolve(response["content"]["application/json"]["schema"])
         item = resolve(result["properties"]["results"]["items"])
         assert {f["name"] for f in interface} <= set(item["properties"])
-        assert comm["response"]["iterate"] == "{{body.results}}"
+        assert comm["response"] == {"limit": "{{parameters.limit}}", "iterate": "{{body.results}}", "output": "{{item}}"}
         if module["endpoint"].endswith("autocomplete"):
-            assert "page" not in comm["body"] and "pagination" not in comm
+            assert "pagination" not in comm
         else:
-            assert (
-                comm["body"]["page"] == 1 and "<= 10" in comm["pagination"]["condition"]
-            )
+            assert comm["pagination"]["qs"] == {"page": "{{pagination.page}}"} and set(comm["pagination"]) == {"qs", "condition"}
+            assert "body.request.page < 10" in comm["pagination"]["condition"]
 print(
     json.dumps(
         {
             "jsonFilesValid": count,
             "modules": len(manifest["modules"]),
-            "searchModules": 10,
+            "searchModules": sum(m["type"] == "search" for m in manifest["modules"]),
             "secretValuesAbsent": True,
             "connectionUnbilled": True,
             "universalOriginFixed": True,

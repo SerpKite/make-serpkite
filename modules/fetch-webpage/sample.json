@@ -1,5 +1,39 @@
 {
-  "request": {},
-  "results": [],
-  "meta": {}
+  "request": {
+    "endpoint": "webpage",
+    "engine": "google",
+    "url": "https://www.example.com/blog/kites",
+    "country": "us"
+  },
+  "url": "https://www.example.com/blog/kites",
+  "status_code": 200,
+  "markdown": "# A short history of kites\n\nKites were first flown in China about 2,500 years ago.",
+  "text": "A short history of kites\n\nKites were first flown in China about 2,500 years ago.",
+  "metadata": {
+    "title": "A short history of kites",
+    "description": "From ancient China to modern kitesurfing.",
+    "language": "en",
+    "canonical": "https://www.example.com/blog/kites",
+    "site_name": "Example Blog",
+    "image": "https://www.example.com/images/kites.jpg",
+    "published_time": "2026-09-15T10:00:00Z",
+    "author": "Jane Example",
+    "content_type": "text/html"
+  },
+  "meta": {
+    "request_id": "01a1687d-0000-7000-8000-000000000000",
+    "credits_used": 1,
+    "engine": "webpage",
+    "route": [
+      {
+        "provider": "webpage",
+        "outcome": "ok",
+        "ms": 1331
+      }
+    ],
+    "cached": false,
+    "resolved_urls": true,
+    "parse_quality": "ok",
+    "latency_ms": 1362
+  }
 }

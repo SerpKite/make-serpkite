@@ -1,37 +1,20 @@
 {
   "url": "/v1/shopping",
-  "method": "POST",
-  "type": "json",
-  "body": {
+  "method": "GET",
+  "qs": {
     "q": "{{parameters.q}}",
     "country": "{{parameters.country}}",
-    "language": "{{parameters.language}}",
-    "page": 1
+    "language": "{{parameters.language}}"
   },
   "response": {
-    "iterate": "{{body.results}}",
     "limit": "{{parameters.limit}}",
-    "output": {
-      "position": "{{item.position}}",
-      "title": "{{item.title}}",
-      "source": "{{item.source}}",
-      "link": "{{item.link}}",
-      "price": "{{item.price}}",
-      "price_value": "{{item.price_value}}",
-      "currency": "{{item.currency}}",
-      "image_url": "{{item.image_url}}",
-      "rating": "{{item.rating}}",
-      "rating_count": "{{item.rating_count}}",
-      "product_id": "{{item.product_id}}"
-    }
+    "iterate": "{{body.results}}",
+    "output": "{{item}}"
   },
   "pagination": {
-    "body": {
-      "q": "{{parameters.q}}",
-      "country": "{{parameters.country}}",
-      "language": "{{parameters.language}}",
+    "qs": {
       "page": "{{pagination.page}}"
     },
-    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+    "condition": "{{length(body.results) > 0 && body.request.page < 10}}"
   }
 }

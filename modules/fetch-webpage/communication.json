@@ -1,11 +1,15 @@
 {
   "url": "/v1/webpage",
   "method": "POST",
-  "response": {
-    "output": "{{body}}"
-  },
   "type": "json",
   "body": {
-    "url": "{{parameters.url}}"
+    "url": "{{parameters.url}}",
+    "include_html": "{{parameters.include_html}}",
+    "include_links": "{{parameters.include_links}}",
+    "include_images": "{{parameters.include_images}}",
+    "country": "{{parameters.country}}"
+  },
+  "response": {
+    "output": "{{body}}"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "url": "/v1/place",
+  "method": "POST",
+  "response": {
+    "output": "{{first(body.results)}}"
+  },
+  "type": "json",
+  "body": {
+    "place_id": "{{parameters.place_id}}",
+    "cid": "{{parameters.cid}}",
+    "fid": "{{parameters.fid}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}"
+  }
+}

@@ -11,17 +11,22 @@
   },
   {
     "name": "image_url",
-    "label": "Image Url",
+    "label": "Image URL",
     "type": "text"
+  },
+  {
+    "name": "image_width",
+    "label": "Image width",
+    "type": "number"
+  },
+  {
+    "name": "image_height",
+    "label": "Image height",
+    "type": "number"
   },
   {
     "name": "thumbnail_url",
-    "label": "Thumbnail Url",
-    "type": "text"
-  },
-  {
-    "name": "link",
-    "label": "Link",
+    "label": "Thumbnail URL",
     "type": "text"
   },
   {
@@ -35,13 +40,8 @@
     "type": "text"
   },
   {
-    "name": "image_width",
-    "label": "Image Width",
-    "type": "number"
-  },
-  {
-    "name": "image_height",
-    "label": "Image Height",
-    "type": "number"
+    "name": "link",
+    "label": "Link",
+    "type": "text"
   }
 ]

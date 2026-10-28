@@ -20,8 +20,63 @@
     "type": "text"
   },
   {
+    "name": "displayed_link",
+    "label": "Displayed link",
+    "type": "text"
+  },
+  {
     "name": "snippet",
     "label": "Snippet",
     "type": "text"
+  },
+  {
+    "name": "date",
+    "label": "Date",
+    "type": "text"
+  },
+  {
+    "name": "sitelinks",
+    "label": "Sitelinks",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "label": "Link",
+          "type": "text"
+        },
+        {
+          "name": "snippet",
+          "label": "Snippet",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "attributes",
+    "label": "Attributes",
+    "type": "collection"
+  },
+  {
+    "name": "rating",
+    "label": "Rating",
+    "type": "number"
+  },
+  {
+    "name": "rating_count",
+    "label": "Rating count",
+    "type": "number"
+  },
+  {
+    "name": "published_at",
+    "label": "Published at",
+    "type": "date"
   }
 ]

@@ -3,21 +3,244 @@
     "name": "request",
     "label": "Request",
     "type": "collection",
-    "spec": []
+    "spec": [
+      {
+        "name": "endpoint",
+        "label": "Endpoint",
+        "type": "text"
+      },
+      {
+        "name": "engine",
+        "label": "Engine",
+        "type": "text"
+      },
+      {
+        "name": "url",
+        "label": "URL",
+        "type": "text"
+      },
+      {
+        "name": "country",
+        "label": "Country",
+        "type": "text"
+      }
+    ]
   },
   {
-    "name": "results",
-    "label": "Results",
+    "name": "url",
+    "label": "Final URL",
+    "type": "text"
+  },
+  {
+    "name": "status_code",
+    "label": "Status code",
+    "type": "number"
+  },
+  {
+    "name": "markdown",
+    "label": "Markdown",
+    "type": "text"
+  },
+  {
+    "name": "text",
+    "label": "Text",
+    "type": "text"
+  },
+  {
+    "name": "html",
+    "label": "HTML",
+    "type": "text"
+  },
+  {
+    "name": "metadata",
+    "label": "Metadata",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "title",
+        "label": "Title",
+        "type": "text"
+      },
+      {
+        "name": "description",
+        "label": "Description",
+        "type": "text"
+      },
+      {
+        "name": "language",
+        "label": "Language",
+        "type": "text"
+      },
+      {
+        "name": "canonical",
+        "label": "Canonical",
+        "type": "text"
+      },
+      {
+        "name": "site_name",
+        "label": "Site name",
+        "type": "text"
+      },
+      {
+        "name": "image",
+        "label": "Image",
+        "type": "text"
+      },
+      {
+        "name": "published_time",
+        "label": "Published time",
+        "type": "text"
+      },
+      {
+        "name": "author",
+        "label": "Author",
+        "type": "text"
+      },
+      {
+        "name": "content_type",
+        "label": "Content type",
+        "type": "text"
+      },
+      {
+        "name": "pages",
+        "label": "Pages",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "name": "links",
+    "label": "Links",
     "type": "array",
     "spec": {
       "type": "collection",
-      "spec": []
+      "spec": [
+        {
+          "name": "url",
+          "label": "URL",
+          "type": "text"
+        },
+        {
+          "name": "text",
+          "label": "Text",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "image_links",
+    "label": "Image links",
+    "type": "array",
+    "spec": {
+      "type": "text"
     }
   },
   {
     "name": "meta",
     "label": "Meta",
     "type": "collection",
-    "spec": []
+    "spec": [
+      {
+        "name": "request_id",
+        "label": "Request ID",
+        "type": "text"
+      },
+      {
+        "name": "credits_used",
+        "label": "Credits used",
+        "type": "number"
+      },
+      {
+        "name": "engine",
+        "label": "Engine",
+        "type": "text"
+      },
+      {
+        "name": "route",
+        "label": "Route",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "provider",
+              "label": "Provider",
+              "type": "text"
+            },
+            {
+              "name": "outcome",
+              "label": "Outcome",
+              "type": "text"
+            },
+            {
+              "name": "ms",
+              "label": "Duration (ms)",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "cached",
+        "label": "Cached",
+        "type": "boolean"
+      },
+      {
+        "name": "cached_at",
+        "label": "Cached at",
+        "type": "date"
+      },
+      {
+        "name": "resolved_urls",
+        "label": "Resolved URLs",
+        "type": "boolean"
+      },
+      {
+        "name": "parse_quality",
+        "label": "Parse quality",
+        "type": "text"
+      },
+      {
+        "name": "latency_ms",
+        "label": "Latency (ms)",
+        "type": "number"
+      },
+      {
+        "name": "llm",
+        "label": "Llm",
+        "type": "collection",
+        "spec": [
+          {
+            "name": "provider",
+            "label": "Provider",
+            "type": "text"
+          },
+          {
+            "name": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "name": "input_tokens",
+            "label": "Input tokens",
+            "type": "number"
+          },
+          {
+            "name": "output_tokens",
+            "label": "Output tokens",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "warnings",
+        "label": "Warnings",
+        "type": "array",
+        "spec": {
+          "type": "text"
+        }
+      }
+    ]
   }
 ]

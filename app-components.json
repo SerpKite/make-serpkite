@@ -5,98 +5,235 @@
   "description": "Search and public web content for automation.",
   "connection": {
     "name": "serpkite-api-key",
-    "label": "SerpKite API Key",
+    "label": "SerpKite API key",
     "type": "api-key"
   },
   "modules": [
     {
-      "name": "search-search",
-      "label": "Search Web Results",
+      "name": "searchSearch",
+      "folder": "search-search",
+      "label": "Search web results",
       "type": "search",
-      "description": "Returns matching search results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google web results for a query, one bundle per organic result.",
       "endpoint": "/v1/search"
     },
     {
-      "name": "search-news",
-      "label": "Search News Articles",
+      "name": "searchNews",
+      "folder": "search-news",
+      "label": "Search news articles",
       "type": "search",
-      "description": "Returns matching news results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google News articles for a query.",
       "endpoint": "/v1/news"
     },
     {
-      "name": "search-images",
-      "label": "Search Images",
+      "name": "searchImages",
+      "folder": "search-images",
+      "label": "Search images",
       "type": "search",
-      "description": "Returns matching images results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google Images results for a query.",
       "endpoint": "/v1/images"
     },
     {
-      "name": "search-videos",
-      "label": "Search Videos",
+      "name": "searchVideos",
+      "folder": "search-videos",
+      "label": "Search videos",
       "type": "search",
-      "description": "Returns matching videos results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google video results for a query.",
       "endpoint": "/v1/videos"
     },
     {
-      "name": "search-maps",
-      "label": "Search Maps Places",
+      "name": "searchMaps",
+      "folder": "search-maps",
+      "label": "Search Google Maps places",
       "type": "search",
-      "description": "Returns matching maps results as individual bundles.",
+      "crud": "read",
+      "description": "Returns places from a Google Maps search, with address, coordinates, rating, opening hours and place IDs.",
       "endpoint": "/v1/maps"
     },
     {
-      "name": "search-places",
-      "label": "Search Places",
+      "name": "searchShopping",
+      "folder": "search-shopping",
+      "label": "Search products",
       "type": "search",
-      "description": "Returns matching places results as individual bundles.",
-      "endpoint": "/v1/places"
-    },
-    {
-      "name": "search-shopping",
-      "label": "Search Products",
-      "type": "search",
-      "description": "Returns matching shopping results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google Shopping product results for a query.",
       "endpoint": "/v1/shopping"
     },
     {
-      "name": "search-scholar",
-      "label": "Search Papers",
+      "name": "searchScholar",
+      "folder": "search-scholar",
+      "label": "Search papers",
       "type": "search",
-      "description": "Returns matching scholar results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google Scholar results for a query.",
       "endpoint": "/v1/scholar"
     },
     {
-      "name": "search-patents",
-      "label": "Search Patents",
+      "name": "searchPatents",
+      "folder": "search-patents",
+      "label": "Search patents",
       "type": "search",
-      "description": "Returns matching patents results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google Patents results for a query.",
       "endpoint": "/v1/patents"
     },
     {
-      "name": "search-autocomplete",
-      "label": "Get Query Suggestions",
+      "name": "searchAutocomplete",
+      "folder": "search-autocomplete",
+      "label": "Get query suggestions",
       "type": "search",
-      "description": "Returns matching autocomplete results as individual bundles.",
+      "crud": "read",
+      "description": "Returns Google autocomplete suggestions for a query.",
       "endpoint": "/v1/autocomplete"
     },
     {
-      "name": "get-account",
-      "label": "Get Account Balance",
+      "name": "getAccount",
+      "folder": "get-account",
+      "label": "Get account balance",
       "type": "action",
-      "description": "Returns the account balance and current limits.",
+      "crud": "read",
+      "description": "Returns the credit balance, rate limit, monthly usage and limits of the account and API key.",
       "endpoint": "/v1/account"
     },
     {
-      "name": "fetch-webpage",
-      "label": "Fetch a Webpage",
+      "name": "fetchWebpage",
+      "folder": "fetch-webpage",
+      "label": "Fetch a webpage",
       "type": "action",
-      "description": "Returns the public page content and metadata.",
+      "crud": "read",
+      "description": "Returns a public web page or PDF as Markdown and plain text, with its metadata.",
       "endpoint": "/v1/webpage"
     },
     {
-      "name": "make-an-api-call",
-      "label": "Make an API Call",
+      "name": "askChatgpt",
+      "folder": "ask-chatgpt",
+      "label": "Ask ChatGPT",
+      "type": "action",
+      "crud": "read",
+      "description": "Asks ChatGPT as a logged-out visitor and returns its answer with the sources it cited, the products and places it showed and the model it used. Takes 10\u201330 s.",
+      "endpoint": "/v1/chatgpt",
+      "group": "AI assistants"
+    },
+    {
+      "name": "askGemini",
+      "folder": "ask-gemini",
+      "label": "Ask Gemini",
+      "type": "action",
+      "crud": "read",
+      "description": "Asks Google Gemini as a logged-out visitor and returns its answer with the sources it grounded on. Takes 5\u201330 s.",
+      "endpoint": "/v1/gemini",
+      "group": "AI assistants"
+    },
+    {
+      "name": "askCopilot",
+      "folder": "ask-copilot",
+      "label": "Ask Copilot Search",
+      "type": "action",
+      "crud": "read",
+      "description": "Asks Microsoft Copilot Search as a logged-out visitor and returns its answer with its cited sources and the products shown beside it. Takes 15\u201340 s.",
+      "endpoint": "/v1/copilot",
+      "group": "AI assistants"
+    },
+    {
+      "name": "askAiMode",
+      "folder": "ask-ai-mode",
+      "label": "Ask Google AI Mode",
+      "type": "action",
+      "crud": "read",
+      "description": "Asks Google AI Mode as a logged-out visitor and returns its answer with the sources it cited. Takes 5\u201345 s.",
+      "endpoint": "/v1/ai_mode",
+      "group": "AI assistants"
+    },
+    {
+      "name": "askBraveAi",
+      "folder": "ask-brave-ai",
+      "label": "Ask Brave AI",
+      "type": "action",
+      "crud": "read",
+      "description": "Asks Brave Search's AI answer as a logged-out visitor and returns its answer with its cited sources, the searches it ran and the products it showed. Takes 1\u201310 s.",
+      "endpoint": "/v1/brave_ai",
+      "group": "AI assistants"
+    },
+    {
+      "name": "getPlace",
+      "folder": "get-place",
+      "label": "Get place details",
+      "type": "action",
+      "crud": "read",
+      "description": "Returns one Google Maps place's full listing: address, coordinates, categories, opening hours per weekday, website, phone, rating, description and photos.",
+      "endpoint": "/v1/place",
+      "group": "Places"
+    },
+    {
+      "name": "listReviews",
+      "folder": "list-reviews",
+      "label": "List place reviews",
+      "type": "search",
+      "crud": "read",
+      "description": "Returns a Google Maps place's most relevant reviews with rating, date, text, reviewer and the owner's response.",
+      "endpoint": "/v1/reviews",
+      "group": "Places"
+    },
+    {
+      "name": "listSiteUrls",
+      "folder": "list-site-urls",
+      "label": "List site URLs",
+      "type": "search",
+      "crud": "read",
+      "description": "Returns the URLs of a site from its sitemaps and start page, optionally ranked by a search phrase.",
+      "endpoint": "/v1/map",
+      "group": "Webpages"
+    },
+    {
+      "name": "extractWebpages",
+      "folder": "extract-webpages",
+      "label": "Extract webpages",
+      "type": "action",
+      "crud": "read",
+      "description": "Returns up to 20 pages or PDFs as Markdown with metadata, optionally with passages ranked by a query and an AI summary per page.",
+      "endpoint": "/v1/extract",
+      "group": "Webpages"
+    },
+    {
+      "name": "startCrawl",
+      "folder": "start-crawl",
+      "label": "Start a crawl",
+      "type": "action",
+      "crud": "create",
+      "description": "Starts reading a site in the background. Get the pages with Get a crawl, or receive them on a webhook.",
+      "endpoint": "/v1/crawl",
+      "group": "Webpages"
+    },
+    {
+      "name": "getCrawl",
+      "folder": "get-crawl",
+      "label": "Get a crawl",
+      "type": "action",
+      "crud": "read",
+      "description": "Returns a crawl's status, progress and, once it has completed, its pages as Markdown. Crawls are kept for 24 hours.",
+      "endpoint": "/v1/crawl/{{parameters.id}}",
+      "group": "Webpages"
+    },
+    {
+      "name": "getAnswer",
+      "folder": "get-answer",
+      "label": "Get a cited answer",
+      "type": "action",
+      "crud": "read",
+      "description": "Answers a question from live Google results and returns the answer with numbered citations and the results it used.",
+      "endpoint": "/v1/answer",
+      "group": "AI answers"
+    },
+    {
+      "name": "makeAnApiCall",
+      "folder": "make-an-api-call",
+      "label": "Make an API call",
       "type": "universal",
+      "crud": null,
       "description": "Performs an arbitrary authorized API call.",
       "endpoint": "relative path on api.serpkite.com"
     }

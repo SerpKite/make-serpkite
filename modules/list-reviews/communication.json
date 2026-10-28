@@ -1,0 +1,22 @@
+{
+  "url": "/v1/reviews",
+  "method": "POST",
+  "response": {
+    "limit": "{{parameters.limit}}",
+    "iterate": "{{body.results}}",
+    "output": "{{item}}"
+  },
+  "type": "json",
+  "body": {
+    "place_id": "{{parameters.place_id}}",
+    "cid": "{{parameters.cid}}",
+    "fid": "{{parameters.fid}}",
+    "language": "{{parameters.language}}"
+  },
+  "pagination": {
+    "body": {
+      "page_token": "{{body.next_page_token}}"
+    },
+    "condition": "{{body.next_page_token}}"
+  }
+}

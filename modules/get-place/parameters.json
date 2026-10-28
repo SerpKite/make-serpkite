@@ -1,0 +1,34 @@
+[
+  {
+    "name": "place_id",
+    "label": "Place ID",
+    "type": "text",
+    "help": "Google place ID (ChIJ…) from Search Google Maps places. Or fill in CID or FID instead."
+  },
+  {
+    "name": "cid",
+    "label": "CID",
+    "type": "text",
+    "advanced": true,
+    "help": "Decimal customer ID from a Maps result, instead of Place ID."
+  },
+  {
+    "name": "fid",
+    "label": "FID",
+    "type": "text",
+    "advanced": true,
+    "help": "Feature ID (0x…:0x…) from a Maps result, instead of Place ID."
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "help": "Two-letter country code (ISO 3166-1 alpha-2), such as us, gb or de. The API uses us when this is empty."
+  },
+  {
+    "name": "language",
+    "label": "Language",
+    "type": "text",
+    "help": "Interface language code, such as en, de or pt-br. The API uses en when this is empty."
+  }
+]

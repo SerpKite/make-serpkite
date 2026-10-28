@@ -1,0 +1,26 @@
+{
+  "request": {
+    "q": "when was the first kite flown"
+  },
+  "answer": "Kites were first flown in China about 2,500 years ago [1].",
+  "citations": [
+    {
+      "index": 1,
+      "title": "A short history of kites",
+      "link": "https://www.example.com/blog/kites",
+      "domain": "example.com"
+    }
+  ],
+  "results": [
+    {
+      "index": 1,
+      "title": "A short history of kites",
+      "link": "https://www.example.com/blog/kites",
+      "domain": "example.com"
+    }
+  ],
+  "meta": {
+    "request_id": "01a1687d-0000-7000-8000-000000000000",
+    "credits_used": 3
+  }
+}

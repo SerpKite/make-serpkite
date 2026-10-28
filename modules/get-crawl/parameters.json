@@ -1,0 +1,9 @@
+[
+  {
+    "name": "id",
+    "label": "Crawl ID",
+    "type": "text",
+    "required": true,
+    "help": "The ID returned by Start a crawl."
+  }
+]

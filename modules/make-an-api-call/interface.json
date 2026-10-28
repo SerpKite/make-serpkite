@@ -2,18 +2,16 @@
   {
     "name": "body",
     "label": "Body",
-    "type": "collection",
-    "spec": []
+    "type": "any"
   },
   {
     "name": "headers",
     "label": "Headers",
-    "type": "collection",
-    "spec": []
+    "type": "collection"
   },
   {
     "name": "statusCode",
-    "label": "Status Code",
+    "label": "Status code",
     "type": "number"
   }
 ]

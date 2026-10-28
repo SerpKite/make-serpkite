@@ -1,0 +1,22 @@
+[
+  {
+    "name": "url",
+    "label": "URL",
+    "type": "text"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "lastmod",
+    "label": "Lastmod",
+    "type": "text"
+  },
+  {
+    "name": "source",
+    "label": "Source",
+    "type": "text"
+  }
+]

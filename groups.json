@@ -1,0 +1,61 @@
+[
+  {
+    "label": "Search",
+    "modules": [
+      "searchSearch",
+      "searchNews",
+      "searchImages",
+      "searchVideos",
+      "searchMaps",
+      "searchShopping",
+      "searchScholar",
+      "searchPatents",
+      "searchAutocomplete"
+    ]
+  },
+  {
+    "label": "AI assistants",
+    "modules": [
+      "askChatgpt",
+      "askGemini",
+      "askCopilot",
+      "askAiMode",
+      "askBraveAi"
+    ]
+  },
+  {
+    "label": "AI answers",
+    "modules": [
+      "getAnswer"
+    ]
+  },
+  {
+    "label": "Places",
+    "modules": [
+      "getPlace",
+      "listReviews"
+    ]
+  },
+  {
+    "label": "Webpages",
+    "modules": [
+      "fetchWebpage",
+      "listSiteUrls",
+      "extractWebpages",
+      "startCrawl",
+      "getCrawl"
+    ]
+  },
+  {
+    "label": "Account",
+    "modules": [
+      "getAccount"
+    ]
+  },
+  {
+    "label": "Other",
+    "modules": [
+      "makeAnApiCall"
+    ]
+  }
+]

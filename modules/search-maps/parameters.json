@@ -10,28 +10,27 @@
     "name": "country",
     "label": "Country",
     "type": "text",
-    "required": true,
     "default": "us",
-    "help": "Two-letter country code, such as us, gb or cy."
+    "help": "Two-letter country code (ISO 3166-1 alpha-2), such as us, gb or de. The API uses us when this is empty."
   },
   {
     "name": "language",
     "label": "Language",
     "type": "text",
-    "required": true,
     "default": "en",
-    "help": "Language code, such as en."
+    "help": "Interface language code, such as en, de or pt-br. The API uses en when this is empty."
+  },
+  {
+    "name": "location",
+    "label": "Location",
+    "type": "text",
+    "help": "Free-text place to search around, such as Austin, Texas, United States. Local queries such as coffee need a location."
   },
   {
     "name": "limit",
     "label": "Limit",
     "type": "uinteger",
-    "required": true,
     "default": 10,
-    "help": "Maximum output bundles. Each requested page uses API credits. Up to ten pages are fetched.",
-    "validate": {
-      "min": 1,
-      "max": 100
-    }
+    "help": "Maximum number of results to return and work with during one execution cycle."
   }
 ]

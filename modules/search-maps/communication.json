@@ -1,38 +1,21 @@
 {
   "url": "/v1/maps",
-  "method": "POST",
-  "type": "json",
-  "body": {
+  "method": "GET",
+  "qs": {
     "q": "{{parameters.q}}",
     "country": "{{parameters.country}}",
     "language": "{{parameters.language}}",
-    "page": 1
+    "location": "{{parameters.location}}"
   },
   "response": {
-    "iterate": "{{body.results}}",
     "limit": "{{parameters.limit}}",
-    "output": {
-      "position": "{{item.position}}",
-      "title": "{{item.title}}",
-      "address": "{{item.address}}",
-      "latitude": "{{item.latitude}}",
-      "longitude": "{{item.longitude}}",
-      "rating": "{{item.rating}}",
-      "rating_count": "{{item.rating_count}}",
-      "website": "{{item.website}}",
-      "phone_number": "{{item.phone_number}}",
-      "place_id": "{{item.place_id}}",
-      "cid": "{{item.cid}}",
-      "fid": "{{item.fid}}"
-    }
+    "iterate": "{{body.results}}",
+    "output": "{{item}}"
   },
   "pagination": {
-    "body": {
-      "q": "{{parameters.q}}",
-      "country": "{{parameters.country}}",
-      "language": "{{parameters.language}}",
+    "qs": {
       "page": "{{pagination.page}}"
     },
-    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+    "condition": "{{length(body.results) > 0 && body.request.page < 10}}"
   }
 }

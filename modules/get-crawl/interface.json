@@ -1,0 +1,324 @@
+[
+  {
+    "name": "id",
+    "label": "ID",
+    "type": "text"
+  },
+  {
+    "name": "kind",
+    "label": "Kind",
+    "type": "text"
+  },
+  {
+    "name": "status",
+    "label": "Status",
+    "type": "text"
+  },
+  {
+    "name": "created_at",
+    "label": "Created at",
+    "type": "date"
+  },
+  {
+    "name": "started_at",
+    "label": "Started at",
+    "type": "date"
+  },
+  {
+    "name": "completed_at",
+    "label": "Completed at",
+    "type": "date"
+  },
+  {
+    "name": "credits_reserved",
+    "label": "Credits reserved",
+    "type": "number"
+  },
+  {
+    "name": "credits_used",
+    "label": "Credits used",
+    "type": "number"
+  },
+  {
+    "name": "webhook_status",
+    "label": "Webhook status",
+    "type": "text"
+  },
+  {
+    "name": "progress",
+    "label": "Progress",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "pages_done",
+        "label": "Pages done",
+        "type": "number"
+      },
+      {
+        "name": "pages_failed",
+        "label": "Pages failed",
+        "type": "number"
+      },
+      {
+        "name": "pages_queued",
+        "label": "Pages queued",
+        "type": "number"
+      },
+      {
+        "name": "pages_discovered",
+        "label": "Pages discovered",
+        "type": "number"
+      },
+      {
+        "name": "limit",
+        "label": "Limit",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "name": "result",
+    "label": "Result",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "url",
+        "label": "URL",
+        "type": "text"
+      },
+      {
+        "name": "pages",
+        "label": "Pages",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "url",
+              "label": "URL",
+              "type": "text"
+            },
+            {
+              "name": "depth",
+              "label": "Depth",
+              "type": "number"
+            },
+            {
+              "name": "title",
+              "label": "Title",
+              "type": "text"
+            },
+            {
+              "name": "markdown",
+              "label": "Markdown",
+              "type": "text"
+            },
+            {
+              "name": "text",
+              "label": "Text",
+              "type": "text"
+            },
+            {
+              "name": "published_at",
+              "label": "Published at",
+              "type": "date"
+            },
+            {
+              "name": "metadata",
+              "label": "Metadata",
+              "type": "collection",
+              "spec": [
+                {
+                  "name": "title",
+                  "label": "Title",
+                  "type": "text"
+                },
+                {
+                  "name": "description",
+                  "label": "Description",
+                  "type": "text"
+                },
+                {
+                  "name": "language",
+                  "label": "Language",
+                  "type": "text"
+                },
+                {
+                  "name": "canonical",
+                  "label": "Canonical",
+                  "type": "text"
+                },
+                {
+                  "name": "site_name",
+                  "label": "Site name",
+                  "type": "text"
+                },
+                {
+                  "name": "image",
+                  "label": "Image",
+                  "type": "text"
+                },
+                {
+                  "name": "published_time",
+                  "label": "Published time",
+                  "type": "text"
+                },
+                {
+                  "name": "author",
+                  "label": "Author",
+                  "type": "text"
+                },
+                {
+                  "name": "content_type",
+                  "label": "Content type",
+                  "type": "text"
+                },
+                {
+                  "name": "pages",
+                  "label": "Pages",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "links",
+              "label": "Links",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "url",
+                    "label": "URL",
+                    "type": "text"
+                  },
+                  {
+                    "name": "text",
+                    "label": "Text",
+                    "type": "text"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "failed",
+        "label": "Failed",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "url",
+              "label": "URL",
+              "type": "text"
+            },
+            {
+              "name": "error",
+              "label": "Error",
+              "type": "collection",
+              "spec": [
+                {
+                  "name": "code",
+                  "label": "Code",
+                  "type": "text"
+                },
+                {
+                  "name": "message",
+                  "label": "Message",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "stats",
+        "label": "Stats",
+        "type": "collection",
+        "spec": [
+          {
+            "name": "pages",
+            "label": "Pages",
+            "type": "number"
+          },
+          {
+            "name": "failed",
+            "label": "Failed",
+            "type": "number"
+          },
+          {
+            "name": "seconds",
+            "label": "Seconds",
+            "type": "number"
+          },
+          {
+            "name": "discovered",
+            "label": "Discovered",
+            "type": "number"
+          },
+          {
+            "name": "queued",
+            "label": "Queued",
+            "type": "number"
+          },
+          {
+            "name": "duplicates",
+            "label": "Duplicates",
+            "type": "number"
+          },
+          {
+            "name": "sitemap_urls",
+            "label": "Sitemap urls",
+            "type": "number"
+          },
+          {
+            "name": "robots",
+            "label": "Robots",
+            "type": "text"
+          },
+          {
+            "name": "robots_disallowed",
+            "label": "Robots disallowed",
+            "type": "number"
+          },
+          {
+            "name": "robots_blocked",
+            "label": "Robots blocked",
+            "type": "number"
+          },
+          {
+            "name": "crawl_delay_ms",
+            "label": "Crawl delay ms",
+            "type": "number"
+          },
+          {
+            "name": "stopped",
+            "label": "Stopped",
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "error",
+    "label": "Error",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "code",
+        "label": "Code",
+        "type": "text"
+      },
+      {
+        "name": "message",
+        "label": "Message",
+        "type": "text"
+      }
+    ]
+  }
+]

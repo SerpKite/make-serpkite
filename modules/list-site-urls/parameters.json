@@ -1,0 +1,28 @@
+[
+  {
+    "name": "url",
+    "label": "Site URL",
+    "type": "url",
+    "required": true,
+    "help": "The site or section to list, such as https://example.com/docs."
+  },
+  {
+    "name": "search",
+    "label": "Search",
+    "type": "text",
+    "help": "Rank the URLs by relevance to this phrase."
+  },
+  {
+    "name": "include_subdomains",
+    "label": "Include subdomains",
+    "type": "boolean",
+    "default": false
+  },
+  {
+    "name": "limit",
+    "label": "Limit",
+    "type": "uinteger",
+    "default": 100,
+    "help": "Maximum number of URLs to return (up to 5,000)."
+  }
+]

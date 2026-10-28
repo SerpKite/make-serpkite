@@ -1,0 +1,14 @@
+{
+  "url": "/v1/brave_ai",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "prompt": "{{parameters.prompt}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "track": "{{parameters.track}}"
+  }
+}

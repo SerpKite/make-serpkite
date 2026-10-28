@@ -1,10 +1,12 @@
 {
   "position": 1,
-  "title": "Example",
-  "link": "https://example.com",
-  "snippet": "Example",
-  "publication_info": "Example",
-  "year": 1,
-  "pdf_url": "https://example.com",
-  "id": "Example"
+  "title": "An example study of kite aerodynamics",
+  "link": "https://journal.example.com/articles/kite-aerodynamics",
+  "domain": "journal.example.com",
+  "publication_info": "A Author, B Author - Journal of Examples, 2024 - journal.example.com",
+  "snippet": "We measure lift and drag on delta kites in a wind tunnel.",
+  "year": 2024,
+  "cited_by": 42,
+  "pdf_url": "https://journal.example.com/articles/kite-aerodynamics.pdf",
+  "id": "AbCdEfGhIjKl"
 }

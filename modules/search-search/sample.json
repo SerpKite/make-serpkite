@@ -1,7 +1,22 @@
 {
   "position": 1,
-  "title": "Example",
-  "link": "https://example.com",
-  "domain": "Example",
-  "snippet": "Example"
+  "title": "Example Domain: documentation and examples",
+  "link": "https://www.example.com/docs",
+  "domain": "example.com",
+  "displayed_link": "https://www.example.com › docs",
+  "snippet": "This domain is for use in documentation examples without needing permission.",
+  "date": "3 days ago",
+  "published_at": "2026-10-20",
+  "sitelinks": [
+    {
+      "title": "Getting started",
+      "link": "https://www.example.com/docs/start",
+      "snippet": "Set up your first project."
+    }
+  ],
+  "attributes": {
+    "Founded": "1992"
+  },
+  "rating": 4.6,
+  "rating_count": 1280
 }

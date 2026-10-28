@@ -1,0 +1,21 @@
+{
+  "request": {
+    "urls": [
+      "https://www.example.com/blog/kites"
+    ]
+  },
+  "results": [
+    {
+      "url": "https://www.example.com/blog/kites",
+      "status_code": 200,
+      "title": "A short history of kites",
+      "markdown": "# A short history of kites\n\nKites were first flown in China about 2,500 years ago.",
+      "summary": "Kites began in China about 2,500 years ago."
+    }
+  ],
+  "failed": [],
+  "meta": {
+    "request_id": "01a1687d-0000-7000-8000-000000000000",
+    "credits_used": 1
+  }
+}

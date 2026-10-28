@@ -1,0 +1,14 @@
+{
+  "url": "/v1/chatgpt",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "prompt": "{{parameters.prompt}}",
+    "web_search": "{{parameters.web_search}}",
+    "country": "{{parameters.country}}",
+    "track": "{{parameters.track}}"
+  }
+}

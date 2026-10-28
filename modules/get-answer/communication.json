@@ -1,0 +1,16 @@
+{
+  "url": "/v1/answer",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "q": "{{parameters.q}}",
+    "depth": "{{parameters.depth}}",
+    "country": "{{parameters.country}}",
+    "language": "{{parameters.language}}",
+    "location": "{{parameters.location}}",
+    "time": "{{parameters.time}}"
+  }
+}

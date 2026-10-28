@@ -1,21 +1,18 @@
 {
   "baseUrl": "https://api.serpkite.com",
+  "timeout": "{{common.timeout}}",
   "headers": {
     "Authorization": "Bearer {{connection.apiKey}}",
     "Content-Type": "application/json"
   },
   "response": {
     "error": {
-      "message": "[{{statusCode}} / {{body.error.code}}] {{body.error.message}}"
+      "message": "[{{statusCode}}{{if(body.error.code, ' / ', '')}}{{body.error.code}}] {{ifempty(body.error.message, 'The SerpKite API returned no error details.')}}"
     }
   },
   "log": {
     "sanitize": [
-      "request.headers.Authorization",
-      "request.body.q",
-      "request.body.webhook_url",
-      "response.body.request.q",
-      "response.body.webhook_url"
+      "request.headers.Authorization"
     ]
   }
 }

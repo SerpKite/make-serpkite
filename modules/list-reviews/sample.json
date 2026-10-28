@@ -1,0 +1,16 @@
+{
+  "rating": 5,
+  "date": "2 weeks ago",
+  "iso_date": "2026-10-10T00:00:00Z",
+  "snippet": "Great espresso and friendly staff.",
+  "likes": 3,
+  "user": {
+    "name": "Alex Example",
+    "link": "https://www.example.com/u/alex",
+    "reviews": 12
+  },
+  "response": {
+    "date": "1 week ago",
+    "snippet": "Thanks, Alex!"
+  }
+}

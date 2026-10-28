@@ -1,0 +1,53 @@
+[
+  {
+    "name": "url",
+    "label": "Start URL",
+    "type": "url",
+    "required": true,
+    "help": "The site or section to crawl, such as https://example.com/docs."
+  },
+  {
+    "name": "limit",
+    "label": "Page limit",
+    "type": "uinteger",
+    "default": 10,
+    "help": "Maximum pages to read (1–1,000). Credits for this many pages are held when the crawl starts, and the pages not read are refunded. Pricing: https://serpkite.com/pricing."
+  },
+  {
+    "name": "max_depth",
+    "label": "Maximum depth",
+    "type": "uinteger",
+    "help": "Link hops from the start URL."
+  },
+  {
+    "name": "include_paths",
+    "label": "Include paths",
+    "type": "array",
+    "spec": {
+      "type": "text",
+      "label": "Path pattern"
+    },
+    "help": "Only crawl paths matching these patterns, such as /docs/*."
+  },
+  {
+    "name": "exclude_paths",
+    "label": "Exclude paths",
+    "type": "array",
+    "spec": {
+      "type": "text",
+      "label": "Path pattern"
+    }
+  },
+  {
+    "name": "query",
+    "label": "Query",
+    "type": "text",
+    "help": "Read the pages most relevant to this phrase first."
+  },
+  {
+    "name": "webhook_url",
+    "label": "Webhook URL",
+    "type": "url",
+    "help": "Receives the result when the crawl ends, for example a Make custom webhook."
+  }
+]

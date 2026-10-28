@@ -1,13 +1,15 @@
 {
   "position": 1,
-  "title": "Example",
-  "source": "Example",
-  "link": "https://example.com",
-  "price": "Example",
-  "price_value": 1,
-  "currency": "Example",
-  "image_url": "https://example.com",
-  "rating": 1,
-  "rating_count": 1,
-  "product_id": "Example"
+  "title": "Example Delta Kite, 150 cm",
+  "source": "Example Store",
+  "link": "https://store.example.com/products/delta-kite",
+  "price": "$39.99",
+  "price_value": 39.99,
+  "currency": "USD",
+  "delivery": "Free delivery",
+  "image_url": "https://store.example.com/images/delta-kite.jpg",
+  "rating": 4.5,
+  "rating_count": 214,
+  "offers": "3 stores",
+  "product_id": "1234567890"
 }

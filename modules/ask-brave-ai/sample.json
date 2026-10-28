@@ -1,0 +1,39 @@
+{
+  "request": {
+    "endpoint": "brave_ai",
+    "prompt": "What are the best CRMs for a 10-person startup?",
+    "country": "us"
+  },
+  "text": "For a 10-person startup, HubSpot CRM and Pipedrive are the most common picks [1][2].",
+  "markdown": "For a 10-person startup, **HubSpot CRM** and **Pipedrive** are the most common picks [1](https://www.example.com/crm-guide)[2](https://reviews.example.com/crm).",
+  "model": "example-model",
+  "sources": [
+    {
+      "position": 1,
+      "title": "The best CRMs for startups",
+      "link": "https://www.example.com/crm-guide",
+      "domain": "example.com",
+      "cited": true
+    }
+  ],
+  "search_queries": [
+    "best crm for small startup"
+  ],
+  "products": [],
+  "related_questions": [
+    "Is HubSpot CRM free?"
+  ],
+  "mentions": [
+    {
+      "term": "Pipedrive",
+      "mentioned": true,
+      "cited": false
+    }
+  ],
+  "meta": {
+    "request_id": "01a1687d-0000-7000-8000-000000000000",
+    "credits_used": 2,
+    "cached": false,
+    "latency_ms": 8200
+  }
+}

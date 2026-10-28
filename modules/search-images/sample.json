@@ -1,11 +1,11 @@
 {
   "position": 1,
-  "title": "Example",
-  "image_url": "https://example.com",
-  "thumbnail_url": "https://example.com",
-  "link": "https://example.com",
-  "source": "Example",
-  "domain": "Example",
-  "image_width": 1,
-  "image_height": 1
+  "title": "Red kite over a green field",
+  "image_url": "https://images.example.com/kite.jpg",
+  "image_width": 1600,
+  "image_height": 1067,
+  "thumbnail_url": "https://images.example.com/kite-thumb.jpg",
+  "source": "Example Photos",
+  "domain": "images.example.com",
+  "link": "https://images.example.com/gallery/kite"
 }

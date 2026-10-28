@@ -1,9 +1,11 @@
 {
   "position": 1,
-  "title": "Example",
-  "link": "https://example.com",
-  "domain": "Example",
-  "snippet": "Example",
-  "source": "Example",
-  "image_url": "https://example.com"
+  "title": "Example City opens its new public library",
+  "link": "https://news.example.com/2026/10/library-opens",
+  "domain": "news.example.com",
+  "snippet": "The library has 200,000 books and a rooftop reading room.",
+  "date": "2 hours ago",
+  "published_at": "2026-10-23T08:00:00Z",
+  "source": "Example News",
+  "image_url": "https://news.example.com/images/library.jpg"
 }

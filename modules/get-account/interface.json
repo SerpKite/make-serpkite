@@ -6,7 +6,7 @@
   },
   {
     "name": "rate_limit_rps",
-    "label": "Rate Limit RPS",
+    "label": "Rate limit (RPS)",
     "type": "number"
   },
   {
@@ -15,9 +15,52 @@
     "type": "text"
   },
   {
+    "name": "key",
+    "label": "Key",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+      },
+      {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+      },
+      {
+        "name": "credit_limit",
+        "label": "Credit limit",
+        "type": "number"
+      },
+      {
+        "name": "credits_used_month",
+        "label": "Credits used this month",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "name": "monthly_spend_cap",
+    "label": "Monthly spend cap",
+    "type": "number"
+  },
+  {
     "name": "month",
     "label": "Month",
     "type": "collection",
-    "spec": []
+    "spec": [
+      {
+        "name": "credits",
+        "label": "Credits",
+        "type": "number"
+      },
+      {
+        "name": "requests",
+        "label": "Requests",
+        "type": "number"
+      }
+    ]
   }
 ]

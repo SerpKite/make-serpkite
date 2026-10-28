@@ -1,14 +1,39 @@
 {
   "position": 1,
-  "title": "Example",
-  "address": "Example",
-  "latitude": 1,
-  "longitude": 1,
-  "rating": 1,
-  "rating_count": 1,
-  "website": "https://example.com",
-  "phone_number": "Example",
-  "place_id": "Example",
-  "cid": "Example",
-  "fid": "Example"
+  "title": "Example Coffee Roasters",
+  "address": "123 Main St, Austin, TX 78701",
+  "latitude": 30.2672,
+  "longitude": -97.7431,
+  "rating": 4.7,
+  "rating_count": 532,
+  "price_level": "$$",
+  "type": "Coffee shop",
+  "types": [
+    "Coffee shop",
+    "Cafe"
+  ],
+  "website": "https://coffee.example.com",
+  "phone_number": "(512) 555-0100",
+  "international_phone_number": "+1 512-555-0100",
+  "opening_hours": {
+    "Monday": "7 am–6 pm",
+    "Sunday": "Closed"
+  },
+  "weekly_hours": {
+    "monday": [
+      {
+        "open": "07:00",
+        "close": "18:00"
+      }
+    ],
+    "sunday": []
+  },
+  "country": "US",
+  "timezone": "America/Chicago",
+  "description": "Small-batch roaster with espresso drinks and pastries.",
+  "google_maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJexample0000",
+  "thumbnail_url": "https://images.example.com/coffee.jpg",
+  "place_id": "ChIJexample0000",
+  "cid": "1234567890123456789",
+  "fid": "0x0:0x112210f4e1b2c315"
 }

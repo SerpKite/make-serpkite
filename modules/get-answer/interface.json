@@ -1,0 +1,243 @@
+[
+  {
+    "name": "request",
+    "label": "Request",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "endpoint",
+        "label": "Endpoint",
+        "type": "text"
+      },
+      {
+        "name": "engine",
+        "label": "Engine",
+        "type": "text"
+      },
+      {
+        "name": "q",
+        "label": "Query",
+        "type": "text"
+      },
+      {
+        "name": "url",
+        "label": "URL",
+        "type": "text"
+      },
+      {
+        "name": "country",
+        "label": "Country",
+        "type": "text"
+      },
+      {
+        "name": "language",
+        "label": "Language",
+        "type": "text"
+      },
+      {
+        "name": "location",
+        "label": "Location",
+        "type": "text"
+      },
+      {
+        "name": "num",
+        "label": "Num",
+        "type": "number"
+      },
+      {
+        "name": "page",
+        "label": "Page",
+        "type": "number"
+      },
+      {
+        "name": "device",
+        "label": "Device",
+        "type": "text"
+      },
+      {
+        "name": "autocorrect",
+        "label": "Autocorrect",
+        "type": "boolean"
+      },
+      {
+        "name": "tbs",
+        "label": "Tbs",
+        "type": "text"
+      },
+      {
+        "name": "start_date",
+        "label": "Start date",
+        "type": "text"
+      },
+      {
+        "name": "end_date",
+        "label": "End date",
+        "type": "text"
+      },
+      {
+        "name": "safe",
+        "label": "Safe",
+        "type": "text"
+      },
+      {
+        "name": "place_id",
+        "label": "Place ID",
+        "type": "text"
+      },
+      {
+        "name": "cid",
+        "label": "CID",
+        "type": "text"
+      },
+      {
+        "name": "fid",
+        "label": "FID",
+        "type": "text"
+      },
+      {
+        "name": "oid",
+        "label": "OID",
+        "type": "text"
+      },
+      {
+        "name": "sort",
+        "label": "Sort",
+        "type": "text"
+      },
+      {
+        "name": "include_content",
+        "label": "Include content",
+        "type": "number"
+      },
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "text"
+      },
+      {
+        "name": "include_domains",
+        "label": "Include domains",
+        "type": "array",
+        "spec": {
+          "type": "text"
+        }
+      },
+      {
+        "name": "exclude_domains",
+        "label": "Exclude domains",
+        "type": "array",
+        "spec": {
+          "type": "text"
+        }
+      },
+      {
+        "name": "boost_domains",
+        "label": "Boost domains",
+        "type": "array",
+        "spec": {
+          "type": "text"
+        }
+      },
+      {
+        "name": "highlights",
+        "label": "Highlights",
+        "type": "boolean"
+      },
+      {
+        "name": "include_answer",
+        "label": "Include answer",
+        "type": "boolean"
+      },
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "type": "text"
+      },
+      {
+        "name": "web_search",
+        "label": "Web search",
+        "type": "boolean"
+      },
+      {
+        "name": "include_html",
+        "label": "Include HTML",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "name": "answer",
+    "label": "Answer",
+    "type": "text"
+  },
+  {
+    "name": "citations",
+    "label": "Citations",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "index",
+          "label": "Index",
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "label": "Link",
+          "type": "text"
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "results",
+    "label": "Results",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "index",
+          "label": "Index",
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "label": "Link",
+          "type": "text"
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "text"
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "meta",
+    "label": "Meta",
+    "type": "text"
+  }
+]

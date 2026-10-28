@@ -1,0 +1,32 @@
+[
+  {
+    "name": "prompt",
+    "label": "Prompt",
+    "type": "text",
+    "required": true,
+    "help": "The question to ask, at most 4,000 characters. Pricing: https://serpkite.com/pricing. Failed, refused and empty answers are not billed."
+  },
+  {
+    "name": "web_search",
+    "label": "Search the web",
+    "type": "boolean",
+    "default": true,
+    "help": "Let ChatGPT search the web before answering, as it does by default for logged-out visitors."
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "help": "Ask from this country (two-letter code, such as gb), so the answer is localized like a visitor's there."
+  },
+  {
+    "name": "track",
+    "label": "Track",
+    "type": "array",
+    "spec": {
+      "type": "text",
+      "label": "Brand or domain"
+    },
+    "help": "Up to 20 brands or domains (such as Pipedrive or hubspot.com). Mentions then says whether the answer names each one and whether a cited source is on it."
+  }
+]

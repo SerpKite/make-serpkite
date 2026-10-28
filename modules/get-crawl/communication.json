@@ -1,0 +1,7 @@
+{
+  "url": "/v1/crawl/{{parameters.id}}",
+  "method": "GET",
+  "response": {
+    "output": "{{body}}"
+  }
+}

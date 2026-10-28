@@ -1,0 +1,37 @@
+[
+  {
+    "name": "id",
+    "label": "ID",
+    "type": "text"
+  },
+  {
+    "name": "kind",
+    "label": "Kind",
+    "type": "text"
+  },
+  {
+    "name": "status",
+    "label": "Status",
+    "type": "text"
+  },
+  {
+    "name": "created_at",
+    "label": "Created at",
+    "type": "date"
+  },
+  {
+    "name": "poll_url",
+    "label": "Poll URL",
+    "type": "text"
+  },
+  {
+    "name": "credits_reserved",
+    "label": "Credits reserved",
+    "type": "number"
+  },
+  {
+    "name": "webhook_url",
+    "label": "Webhook URL",
+    "type": "text"
+  }
+]

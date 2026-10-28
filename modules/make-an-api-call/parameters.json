@@ -4,7 +4,7 @@
     "label": "URL",
     "type": "text",
     "required": true,
-    "help": "Path relative to https://api.serpkite.com, starting with /. Example: /v1/account. Full external URLs are not supported."
+    "help": "Enter a path relative to `https://api.serpkite.com`. For example: `/v1/account`"
   },
   {
     "name": "method",
@@ -32,28 +32,50 @@
     ]
   },
   {
-    "name": "qs",
-    "label": "Query String",
+    "name": "headers",
+    "label": "Headers",
     "type": "array",
     "spec": [
       {
         "name": "key",
         "label": "Key",
-        "type": "text",
-        "required": true
+        "type": "text"
       },
       {
         "name": "value",
         "label": "Value",
-        "type": "text",
-        "required": true
+        "type": "text"
+      }
+    ],
+    "default": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "help": "You don't have to add authorization headers; we already did that for you."
+  },
+  {
+    "name": "qs",
+    "label": "Query string",
+    "type": "array",
+    "spec": [
+      {
+        "name": "key",
+        "label": "Key",
+        "type": "text"
+      },
+      {
+        "name": "value",
+        "label": "Value",
+        "type": "text"
       }
     ]
   },
   {
     "name": "body",
     "label": "Body",
-    "type": "text",
-    "help": "JSON request body. Use JSON > Create JSON for escaped values. The connection provides authorization."
+    "type": "any",
+    "help": "JSON request body, for example for POST /v1/batches."
   }
 ]

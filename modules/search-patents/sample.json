@@ -1,11 +1,16 @@
 {
   "position": 1,
-  "title": "Example",
-  "snippet": "Example",
-  "link": "https://example.com",
-  "publication_number": "Example",
-  "inventor": "Example",
-  "assignee": "Example",
-  "language": "Example",
-  "pdf_url": "https://example.com"
+  "title": "Kite with a foldable frame",
+  "snippet": "A kite frame that folds into a carrying tube without tools.",
+  "link": "https://patents.example.com/patent/US1234567B2/en",
+  "publication_number": "US1234567B2",
+  "priority_date": "2022-03-01",
+  "filing_date": "2023-02-28",
+  "grant_date": "2024-03-01",
+  "publication_date": "2024-03-01",
+  "inventor": "Jane Example",
+  "assignee": "Example Kites Inc.",
+  "language": "en",
+  "pdf_url": "https://patents.example.com/pdfs/US1234567B2.pdf",
+  "thumbnail_url": "https://patents.example.com/thumbs/US1234567B2.png"
 }

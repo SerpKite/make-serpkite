@@ -26,7 +26,7 @@
   },
   {
     "name": "image_url",
-    "label": "Image Url",
+    "label": "Image URL",
     "type": "text"
   },
   {
@@ -43,5 +43,15 @@
     "name": "channel",
     "label": "Channel",
     "type": "text"
+  },
+  {
+    "name": "date",
+    "label": "Date",
+    "type": "text"
+  },
+  {
+    "name": "published_at",
+    "label": "Published at",
+    "type": "date"
   }
 ]

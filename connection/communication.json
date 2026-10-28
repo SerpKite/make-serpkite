@@ -6,7 +6,7 @@
   },
   "response": {
     "error": {
-      "message": "[{{statusCode}} / {{body.error.code}}] {{body.error.message}}"
+      "message": "[{{statusCode}}{{if(body.error.code, ' / ', '')}}{{body.error.code}}] {{ifempty(body.error.message, 'The SerpKite API returned no error details.')}}"
     }
   },
   "log": {

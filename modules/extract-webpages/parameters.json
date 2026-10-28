@@ -1,0 +1,45 @@
+[
+  {
+    "name": "urls",
+    "label": "URLs",
+    "type": "array",
+    "required": true,
+    "spec": {
+      "type": "url",
+      "label": "URL"
+    },
+    "help": "Up to 20 public pages or PDFs."
+  },
+  {
+    "name": "query",
+    "label": "Query",
+    "type": "text",
+    "help": "Rank each page's passages by this phrase and return the best as Highlights."
+  },
+  {
+    "name": "summary",
+    "label": "Summarize",
+    "type": "boolean",
+    "default": false,
+    "help": "Add an AI summary of each page. Pricing: https://serpkite.com/pricing."
+  },
+  {
+    "name": "prompt",
+    "label": "Summary instructions",
+    "type": "text",
+    "help": "What the summary should focus on, such as \"pricing and plans\". Used with Summarize."
+  },
+  {
+    "name": "include_links",
+    "label": "Include links",
+    "type": "boolean",
+    "default": false
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "advanced": true,
+    "help": "Fetch the pages as seen from this country (two-letter code, such as gb)."
+  }
+]

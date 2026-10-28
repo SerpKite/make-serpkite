@@ -1,0 +1,66 @@
+[
+  {
+    "name": "rating",
+    "label": "Rating",
+    "type": "number"
+  },
+  {
+    "name": "date",
+    "label": "Date",
+    "type": "text"
+  },
+  {
+    "name": "iso_date",
+    "label": "ISO date",
+    "type": "text"
+  },
+  {
+    "name": "snippet",
+    "label": "Snippet",
+    "type": "text"
+  },
+  {
+    "name": "likes",
+    "label": "Likes",
+    "type": "number"
+  },
+  {
+    "name": "user",
+    "label": "User",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+      },
+      {
+        "name": "thumbnail",
+        "label": "Thumbnail",
+        "type": "text"
+      },
+      {
+        "name": "reviews",
+        "label": "Reviews",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "name": "response",
+    "label": "Response",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "snippet",
+        "label": "Snippet",
+        "type": "text"
+      },
+      {
+        "name": "date",
+        "label": "Date",
+        "type": "text"
+      }
+    ]
+  }
+]

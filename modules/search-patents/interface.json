@@ -21,7 +21,27 @@
   },
   {
     "name": "publication_number",
-    "label": "Publication Number",
+    "label": "Publication number",
+    "type": "text"
+  },
+  {
+    "name": "priority_date",
+    "label": "Priority date",
+    "type": "text"
+  },
+  {
+    "name": "filing_date",
+    "label": "Filing date",
+    "type": "text"
+  },
+  {
+    "name": "grant_date",
+    "label": "Grant date",
+    "type": "text"
+  },
+  {
+    "name": "publication_date",
+    "label": "Publication date",
     "type": "text"
   },
   {
@@ -41,7 +61,12 @@
   },
   {
     "name": "pdf_url",
-    "label": "Pdf Url",
+    "label": "PDF URL",
+    "type": "text"
+  },
+  {
+    "name": "thumbnail_url",
+    "label": "Thumbnail URL",
     "type": "text"
   }
 ]

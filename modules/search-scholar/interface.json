@@ -15,13 +15,18 @@
     "type": "text"
   },
   {
-    "name": "snippet",
-    "label": "Snippet",
+    "name": "domain",
+    "label": "Domain",
     "type": "text"
   },
   {
     "name": "publication_info",
-    "label": "Publication Info",
+    "label": "Publication info",
+    "type": "text"
+  },
+  {
+    "name": "snippet",
+    "label": "Snippet",
     "type": "text"
   },
   {
@@ -30,13 +35,18 @@
     "type": "number"
   },
   {
+    "name": "cited_by",
+    "label": "Cited by",
+    "type": "number"
+  },
+  {
     "name": "pdf_url",
-    "label": "Pdf Url",
+    "label": "PDF URL",
     "type": "text"
   },
   {
     "name": "id",
-    "label": "Id",
+    "label": "Paper ID",
     "type": "text"
   }
 ]

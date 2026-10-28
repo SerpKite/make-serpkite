@@ -1,0 +1,16 @@
+{
+  "url": "/v1/extract",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "urls": "{{parameters.urls}}",
+    "query": "{{parameters.query}}",
+    "summary": "{{parameters.summary}}",
+    "prompt": "{{parameters.prompt}}",
+    "include_links": "{{parameters.include_links}}",
+    "country": "{{parameters.country}}"
+  }
+}

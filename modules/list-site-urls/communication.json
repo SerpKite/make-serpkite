@@ -1,0 +1,16 @@
+{
+  "url": "/v1/map",
+  "method": "POST",
+  "response": {
+    "limit": "{{parameters.limit}}",
+    "iterate": "{{body.results}}",
+    "output": "{{item}}"
+  },
+  "type": "json",
+  "body": {
+    "url": "{{parameters.url}}",
+    "search": "{{parameters.search}}",
+    "include_subdomains": "{{parameters.include_subdomains}}",
+    "limit": "{{parameters.limit}}"
+  }
+}

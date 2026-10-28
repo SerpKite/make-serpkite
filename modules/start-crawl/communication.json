@@ -1,0 +1,17 @@
+{
+  "url": "/v1/crawl",
+  "method": "POST",
+  "response": {
+    "output": "{{body}}"
+  },
+  "type": "json",
+  "body": {
+    "url": "{{parameters.url}}",
+    "limit": "{{parameters.limit}}",
+    "max_depth": "{{parameters.max_depth}}",
+    "include_paths": "{{parameters.include_paths}}",
+    "exclude_paths": "{{parameters.exclude_paths}}",
+    "query": "{{parameters.query}}",
+    "webhook_url": "{{parameters.webhook_url}}"
+  }
+}

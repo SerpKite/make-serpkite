@@ -1,0 +1,71 @@
+[
+  {
+    "name": "q",
+    "label": "Question",
+    "type": "text",
+    "required": true,
+    "help": "The question to answer from live Google results. Pricing: https://serpkite.com/pricing; a failed answer is not billed."
+  },
+  {
+    "name": "depth",
+    "label": "Depth",
+    "type": "select",
+    "default": "fast",
+    "options": [
+      {
+        "label": "Fast (from search snippets)",
+        "value": "fast"
+      },
+      {
+        "label": "Standard (reads the top pages)",
+        "value": "standard"
+      }
+    ]
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "help": "Two-letter country code (ISO 3166-1 alpha-2), such as us, gb or de. The API uses us when this is empty."
+  },
+  {
+    "name": "language",
+    "label": "Language",
+    "type": "text",
+    "help": "Interface language code, such as en, de or pt-br. The API uses en when this is empty."
+  },
+  {
+    "name": "location",
+    "label": "Location",
+    "type": "text",
+    "help": "Free-text place to search around, such as Austin, Texas, United States. Local queries such as coffee need a location."
+  },
+  {
+    "name": "time",
+    "label": "Time",
+    "type": "select",
+    "options": [
+      {
+        "label": "Hour",
+        "value": "hour"
+      },
+      {
+        "label": "Day",
+        "value": "day"
+      },
+      {
+        "label": "Week",
+        "value": "week"
+      },
+      {
+        "label": "Month",
+        "value": "month"
+      },
+      {
+        "label": "Year",
+        "value": "year"
+      }
+    ],
+    "help": "Only use results from this recent period."
+  }
+]

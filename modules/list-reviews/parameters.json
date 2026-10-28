@@ -1,0 +1,35 @@
+[
+  {
+    "name": "place_id",
+    "label": "Place ID",
+    "type": "text",
+    "help": "Google place ID (ChIJ…) from Search Google Maps places. Or fill in CID or FID instead."
+  },
+  {
+    "name": "cid",
+    "label": "CID",
+    "type": "text",
+    "advanced": true,
+    "help": "Decimal customer ID from a Maps result, instead of Place ID."
+  },
+  {
+    "name": "fid",
+    "label": "FID",
+    "type": "text",
+    "advanced": true,
+    "help": "Feature ID (0x…:0x…) from a Maps result, instead of Place ID."
+  },
+  {
+    "name": "language",
+    "label": "Language",
+    "type": "text",
+    "help": "Interface language code, such as en, de or pt-br. The API uses en when this is empty."
+  },
+  {
+    "name": "limit",
+    "label": "Limit",
+    "type": "uinteger",
+    "default": 10,
+    "help": "Maximum number of results to return and work with during one execution cycle. Reviews come 10 per request."
+  }
+]

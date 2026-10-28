@@ -1,11 +1,14 @@
 {
   "url": "https://api.serpkite.com/{{parameters.url}}",
   "method": "{{parameters.method}}",
-  "type": "text",
-  "body": "{{parameters.body}}",
+  "headers": {
+    "{{...}}": "{{toCollection(parameters.headers, 'key', 'value')}}"
+  },
   "qs": {
     "{{...}}": "{{toCollection(parameters.qs, 'key', 'value')}}"
   },
+  "body": "{{parameters.body}}",
+  "type": "text",
   "response": {
     "output": {
       "body": "{{body}}",
@@ -16,11 +19,8 @@
   "log": {
     "sanitize": [
       "request.headers.Authorization",
-      "request.body",
       "request.qs.api_key",
-      "request.qs.key",
-      "response.body.request.q",
-      "response.body.webhook_url"
+      "request.qs.key"
     ]
   }
 }

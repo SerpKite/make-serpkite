@@ -4,6 +4,34 @@
     "label": "URL",
     "type": "url",
     "required": true,
-    "help": "Public HTML or PDF URL. Fetching uses one credit."
+    "help": "Public HTML page or PDF."
+  },
+  {
+    "name": "include_html",
+    "label": "Include HTML",
+    "type": "boolean",
+    "default": false,
+    "help": "Also return the page's HTML in HTML."
+  },
+  {
+    "name": "include_links",
+    "label": "Include links",
+    "type": "boolean",
+    "default": false,
+    "help": "Also return the page's outbound links in Links."
+  },
+  {
+    "name": "include_images",
+    "label": "Include image links",
+    "type": "boolean",
+    "default": false,
+    "help": "Also return the page's image URLs in Image links."
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "advanced": true,
+    "help": "Fetch the page as seen from this country (two-letter code, such as gb), for pages that differ by location."
   }
 ]

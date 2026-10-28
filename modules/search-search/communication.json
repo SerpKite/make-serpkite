@@ -1,31 +1,20 @@
 {
   "url": "/v1/search",
-  "method": "POST",
-  "type": "json",
-  "body": {
+  "method": "GET",
+  "qs": {
     "q": "{{parameters.q}}",
     "country": "{{parameters.country}}",
-    "language": "{{parameters.language}}",
-    "page": 1
+    "language": "{{parameters.language}}"
   },
   "response": {
-    "iterate": "{{body.results}}",
     "limit": "{{parameters.limit}}",
-    "output": {
-      "position": "{{item.position}}",
-      "title": "{{item.title}}",
-      "link": "{{item.link}}",
-      "domain": "{{item.domain}}",
-      "snippet": "{{item.snippet}}"
-    }
+    "iterate": "{{body.results}}",
+    "output": "{{item}}"
   },
   "pagination": {
-    "body": {
-      "q": "{{parameters.q}}",
-      "country": "{{parameters.country}}",
-      "language": "{{parameters.language}}",
+    "qs": {
       "page": "{{pagination.page}}"
     },
-    "condition": "{{length(body.results) > 0 && pagination.page <= 10}}"
+    "condition": "{{length(body.results) > 0 && body.request.page < 10}}"
   }
 }

@@ -1,11 +1,13 @@
 {
   "position": 1,
-  "title": "Example",
-  "link": "https://example.com",
-  "domain": "Example",
-  "snippet": "Example",
-  "image_url": "https://example.com",
-  "duration": "Example",
-  "source": "Example",
-  "channel": "Example"
+  "title": "How to fly a kite in light wind",
+  "link": "https://video.example.com/watch/abc123",
+  "domain": "video.example.com",
+  "snippet": "Five tips for launching a kite when the wind is under 10 km/h.",
+  "image_url": "https://video.example.com/thumbs/abc123.jpg",
+  "duration": "8:42",
+  "source": "Example Video",
+  "channel": "Kite School",
+  "date": "Oct 1, 2026",
+  "published_at": "2026-10-01"
 }

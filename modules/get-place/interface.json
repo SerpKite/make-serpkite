@@ -1,0 +1,364 @@
+[
+  {
+    "name": "position",
+    "label": "Position",
+    "type": "number"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text"
+  },
+  {
+    "name": "address",
+    "label": "Address",
+    "type": "text"
+  },
+  {
+    "name": "latitude",
+    "label": "Latitude",
+    "type": "number"
+  },
+  {
+    "name": "longitude",
+    "label": "Longitude",
+    "type": "number"
+  },
+  {
+    "name": "rating",
+    "label": "Rating",
+    "type": "number"
+  },
+  {
+    "name": "rating_count",
+    "label": "Rating count",
+    "type": "number"
+  },
+  {
+    "name": "price_level",
+    "label": "Price level",
+    "type": "text"
+  },
+  {
+    "name": "type",
+    "label": "Type",
+    "type": "text"
+  },
+  {
+    "name": "types",
+    "label": "Types",
+    "type": "array",
+    "spec": {
+      "type": "text"
+    }
+  },
+  {
+    "name": "website",
+    "label": "Website",
+    "type": "text"
+  },
+  {
+    "name": "phone_number",
+    "label": "Phone number",
+    "type": "text"
+  },
+  {
+    "name": "international_phone_number",
+    "label": "International phone number",
+    "type": "text"
+  },
+  {
+    "name": "opening_hours",
+    "label": "Opening hours",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "Monday",
+        "label": "Monday",
+        "type": "text"
+      },
+      {
+        "name": "Tuesday",
+        "label": "Tuesday",
+        "type": "text"
+      },
+      {
+        "name": "Wednesday",
+        "label": "Wednesday",
+        "type": "text"
+      },
+      {
+        "name": "Thursday",
+        "label": "Thursday",
+        "type": "text"
+      },
+      {
+        "name": "Friday",
+        "label": "Friday",
+        "type": "text"
+      },
+      {
+        "name": "Saturday",
+        "label": "Saturday",
+        "type": "text"
+      },
+      {
+        "name": "Sunday",
+        "label": "Sunday",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "name": "weekly_hours",
+    "label": "Weekly hours",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "monday",
+        "label": "Monday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "tuesday",
+        "label": "Tuesday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "wednesday",
+        "label": "Wednesday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "thursday",
+        "label": "Thursday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "friday",
+        "label": "Friday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "saturday",
+        "label": "Saturday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "name": "sunday",
+        "label": "Sunday",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "open",
+              "label": "Open",
+              "type": "text"
+            },
+            {
+              "name": "close",
+              "label": "Close",
+              "type": "text"
+            },
+            {
+              "name": "next_day",
+              "label": "Closes next day",
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text"
+  },
+  {
+    "name": "timezone",
+    "label": "Timezone",
+    "type": "text"
+  },
+  {
+    "name": "description",
+    "label": "Description",
+    "type": "text"
+  },
+  {
+    "name": "photos",
+    "label": "Photos",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "url",
+          "label": "URL",
+          "type": "text"
+        },
+        {
+          "name": "width",
+          "label": "Width",
+          "type": "number"
+        },
+        {
+          "name": "height",
+          "label": "Height",
+          "type": "number"
+        },
+        {
+          "name": "source",
+          "label": "Source",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "google_maps_url",
+    "label": "Google Maps URL",
+    "type": "text"
+  },
+  {
+    "name": "thumbnail_url",
+    "label": "Thumbnail URL",
+    "type": "text"
+  },
+  {
+    "name": "place_id",
+    "label": "Place ID",
+    "type": "text"
+  },
+  {
+    "name": "cid",
+    "label": "CID",
+    "type": "text"
+  },
+  {
+    "name": "fid",
+    "label": "FID",
+    "type": "text"
+  }
+]

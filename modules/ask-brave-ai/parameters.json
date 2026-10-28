@@ -1,0 +1,31 @@
+[
+  {
+    "name": "prompt",
+    "label": "Prompt",
+    "type": "text",
+    "required": true,
+    "help": "The question to ask, at most 4,000 characters. Pricing: https://serpkite.com/pricing. Failed, refused and empty answers are not billed."
+  },
+  {
+    "name": "country",
+    "label": "Country",
+    "type": "text",
+    "help": "Two-letter country code (ISO 3166-1 alpha-2), such as us, gb or de. The API uses us when this is empty."
+  },
+  {
+    "name": "language",
+    "label": "Language",
+    "type": "text",
+    "help": "Interface language code, such as en, de or pt-br. The API uses en when this is empty."
+  },
+  {
+    "name": "track",
+    "label": "Track",
+    "type": "array",
+    "spec": {
+      "type": "text",
+      "label": "Brand or domain"
+    },
+    "help": "Up to 20 brands or domains (such as Pipedrive or hubspot.com). Mentions then says whether the answer names each one and whether a cited source is on it."
+  }
+]

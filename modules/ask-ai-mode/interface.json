@@ -1,0 +1,725 @@
+[
+  {
+    "name": "request",
+    "label": "Request",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "endpoint",
+        "label": "Endpoint",
+        "type": "text"
+      },
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "type": "text"
+      },
+      {
+        "name": "country",
+        "label": "Country",
+        "type": "text"
+      },
+      {
+        "name": "language",
+        "label": "Language",
+        "type": "text"
+      },
+      {
+        "name": "web_search",
+        "label": "Web search",
+        "type": "boolean"
+      },
+      {
+        "name": "include_html",
+        "label": "Include HTML",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "name": "text",
+    "label": "Text",
+    "type": "text"
+  },
+  {
+    "name": "markdown",
+    "label": "Markdown",
+    "type": "text"
+  },
+  {
+    "name": "model",
+    "label": "Model",
+    "type": "text"
+  },
+  {
+    "name": "sources",
+    "label": "Sources",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "position",
+          "label": "Position",
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "label": "Link",
+          "type": "text"
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "text"
+        },
+        {
+          "name": "snippet",
+          "label": "Snippet",
+          "type": "text"
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "text"
+        },
+        {
+          "name": "cited",
+          "label": "Cited",
+          "type": "boolean"
+        }
+      ]
+    }
+  },
+  {
+    "name": "search_queries",
+    "label": "Search queries",
+    "type": "array",
+    "spec": {
+      "type": "text"
+    }
+  },
+  {
+    "name": "products",
+    "label": "Products",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "position",
+          "label": "Position",
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "brand",
+          "label": "Brand",
+          "type": "text"
+        },
+        {
+          "name": "price",
+          "label": "Price",
+          "type": "text"
+        },
+        {
+          "name": "extracted_price",
+          "label": "Extracted price",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "label": "Currency",
+          "type": "text"
+        },
+        {
+          "name": "rating",
+          "label": "Rating",
+          "type": "number"
+        },
+        {
+          "name": "reviews",
+          "label": "Reviews",
+          "type": "number"
+        },
+        {
+          "name": "merchant",
+          "label": "Merchant",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "label": "Link",
+          "type": "text"
+        },
+        {
+          "name": "image",
+          "label": "Image",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "text"
+        },
+        {
+          "name": "sponsored",
+          "label": "Sponsored",
+          "type": "boolean"
+        }
+      ]
+    }
+  },
+  {
+    "name": "places",
+    "label": "Places",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "position",
+          "label": "Position",
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "label": "Address",
+          "type": "text"
+        },
+        {
+          "name": "latitude",
+          "label": "Latitude",
+          "type": "number"
+        },
+        {
+          "name": "longitude",
+          "label": "Longitude",
+          "type": "number"
+        },
+        {
+          "name": "rating",
+          "label": "Rating",
+          "type": "number"
+        },
+        {
+          "name": "rating_count",
+          "label": "Rating count",
+          "type": "number"
+        },
+        {
+          "name": "price_level",
+          "label": "Price level",
+          "type": "text"
+        },
+        {
+          "name": "type",
+          "label": "Type",
+          "type": "text"
+        },
+        {
+          "name": "types",
+          "label": "Types",
+          "type": "array",
+          "spec": {
+            "type": "text"
+          }
+        },
+        {
+          "name": "website",
+          "label": "Website",
+          "type": "text"
+        },
+        {
+          "name": "phone_number",
+          "label": "Phone number",
+          "type": "text"
+        },
+        {
+          "name": "international_phone_number",
+          "label": "International phone number",
+          "type": "text"
+        },
+        {
+          "name": "opening_hours",
+          "label": "Opening hours",
+          "type": "collection",
+          "spec": [
+            {
+              "name": "Monday",
+              "label": "Monday",
+              "type": "text"
+            },
+            {
+              "name": "Tuesday",
+              "label": "Tuesday",
+              "type": "text"
+            },
+            {
+              "name": "Wednesday",
+              "label": "Wednesday",
+              "type": "text"
+            },
+            {
+              "name": "Thursday",
+              "label": "Thursday",
+              "type": "text"
+            },
+            {
+              "name": "Friday",
+              "label": "Friday",
+              "type": "text"
+            },
+            {
+              "name": "Saturday",
+              "label": "Saturday",
+              "type": "text"
+            },
+            {
+              "name": "Sunday",
+              "label": "Sunday",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "weekly_hours",
+          "label": "Weekly hours",
+          "type": "collection",
+          "spec": [
+            {
+              "name": "monday",
+              "label": "Monday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "tuesday",
+              "label": "Tuesday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "wednesday",
+              "label": "Wednesday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "thursday",
+              "label": "Thursday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "friday",
+              "label": "Friday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "saturday",
+              "label": "Saturday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "sunday",
+              "label": "Sunday",
+              "type": "array",
+              "spec": {
+                "type": "collection",
+                "spec": [
+                  {
+                    "name": "open",
+                    "label": "Open",
+                    "type": "text"
+                  },
+                  {
+                    "name": "close",
+                    "label": "Close",
+                    "type": "text"
+                  },
+                  {
+                    "name": "next_day",
+                    "label": "Closes next day",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "country",
+          "label": "Country",
+          "type": "text"
+        },
+        {
+          "name": "timezone",
+          "label": "Timezone",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "text"
+        },
+        {
+          "name": "photos",
+          "label": "Photos",
+          "type": "array",
+          "spec": {
+            "type": "collection",
+            "spec": [
+              {
+                "name": "url",
+                "label": "URL",
+                "type": "text"
+              },
+              {
+                "name": "width",
+                "label": "Width",
+                "type": "number"
+              },
+              {
+                "name": "height",
+                "label": "Height",
+                "type": "number"
+              },
+              {
+                "name": "source",
+                "label": "Source",
+                "type": "text"
+              }
+            ]
+          }
+        },
+        {
+          "name": "google_maps_url",
+          "label": "Google Maps URL",
+          "type": "text"
+        },
+        {
+          "name": "thumbnail_url",
+          "label": "Thumbnail URL",
+          "type": "text"
+        },
+        {
+          "name": "place_id",
+          "label": "Place ID",
+          "type": "text"
+        },
+        {
+          "name": "cid",
+          "label": "CID",
+          "type": "text"
+        },
+        {
+          "name": "fid",
+          "label": "FID",
+          "type": "text"
+        },
+        {
+          "name": "oid",
+          "label": "OID",
+          "type": "text"
+        },
+        {
+          "name": "yandex_maps_url",
+          "label": "Yandex Maps URL",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  {
+    "name": "related_questions",
+    "label": "Related questions",
+    "type": "array",
+    "spec": {
+      "type": "text"
+    }
+  },
+  {
+    "name": "mentions",
+    "label": "Mentions",
+    "type": "array",
+    "spec": {
+      "type": "collection",
+      "spec": [
+        {
+          "name": "term",
+          "label": "Term",
+          "type": "text"
+        },
+        {
+          "name": "mentioned",
+          "label": "Mentioned",
+          "type": "boolean"
+        },
+        {
+          "name": "cited",
+          "label": "Cited",
+          "type": "boolean"
+        },
+        {
+          "name": "sources",
+          "label": "Sources",
+          "type": "array",
+          "spec": {
+            "type": "number"
+          }
+        },
+        {
+          "name": "products",
+          "label": "Products",
+          "type": "array",
+          "spec": {
+            "type": "number"
+          }
+        },
+        {
+          "name": "text_position",
+          "label": "Text position",
+          "type": "number"
+        }
+      ]
+    }
+  },
+  {
+    "name": "meta",
+    "label": "Meta",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "request_id",
+        "label": "Request ID",
+        "type": "text"
+      },
+      {
+        "name": "credits_used",
+        "label": "Credits used",
+        "type": "number"
+      },
+      {
+        "name": "engine",
+        "label": "Engine",
+        "type": "text"
+      },
+      {
+        "name": "route",
+        "label": "Route",
+        "type": "array",
+        "spec": {
+          "type": "collection",
+          "spec": [
+            {
+              "name": "provider",
+              "label": "Provider",
+              "type": "text"
+            },
+            {
+              "name": "outcome",
+              "label": "Outcome",
+              "type": "text"
+            },
+            {
+              "name": "ms",
+              "label": "Duration (ms)",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "cached",
+        "label": "Cached",
+        "type": "boolean"
+      },
+      {
+        "name": "cached_at",
+        "label": "Cached at",
+        "type": "date"
+      },
+      {
+        "name": "resolved_urls",
+        "label": "Resolved URLs",
+        "type": "boolean"
+      },
+      {
+        "name": "parse_quality",
+        "label": "Parse quality",
+        "type": "text"
+      },
+      {
+        "name": "latency_ms",
+        "label": "Latency (ms)",
+        "type": "number"
+      },
+      {
+        "name": "llm",
+        "label": "Llm",
+        "type": "collection",
+        "spec": [
+          {
+            "name": "provider",
+            "label": "Provider",
+            "type": "text"
+          },
+          {
+            "name": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "name": "input_tokens",
+            "label": "Input tokens",
+            "type": "number"
+          },
+          {
+            "name": "output_tokens",
+            "label": "Output tokens",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "warnings",
+        "label": "Warnings",
+        "type": "array",
+        "spec": {
+          "type": "text"
+        }
+      }
+    ]
+  }
+]
